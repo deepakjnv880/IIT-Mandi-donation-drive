@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- <script type="text/javascript" src = "/static/main.js"></script> -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+ // function logout() {
+ //
+ // }
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+socket.on('connect', function(data) {
+  // alert("conenction");
+  var myemail=document.getElementById('trick');
+  alert(myemail.value);
+  // socket.emit("connect",{me:myemail.value});
+//     // socket.emit('connection', {data: 'I\'m connected!'});
+});
+socket.emit('online');
+socket.emit('update_post');
+// // if (window.performance) {
+// //   alert("window.performance works fine on this browser");
+// // }
+// //   if (performance.navigation.type == 1) {
+// //     // socket.emit('update_post');
+// //     alert( "This page is reloaded" );
+// //   } else {
+// //     alert( "This page is not reloaded");
+// //   }
+//
+//     //
+
+      // document.getElementsByClassName('recommended').onclick
+
+
+//
+
+  function openchat(name,email,myemail){
+    // alert(email);
+    // alert(name);
+    var box=document.getElementById('chatbox');
+    // alert(box.style.display);
+    if (box.style.display=='none') {
+    box.style.display='inline-block';
+    }
+    var New_Chatbox=document.createElement("div");
+    // var Name_box=name;
+    // New_Chatbox.style.marginRight='10px';
+    // New_Chatbox.style.marginLeft='10px';
+
+    var Chat_head=document.createElement("div");
+    Chat_head.innerHTML='<a style="color:white">'+name+'</a>';
+    var cross_button=document.createElement('span');
+    // cross_button.id=Name+"X";
+    cross_button.className="glyphicon glyphicon-remove";
+    cross_button.style.position='relative';
+    cross_button.style.float='right';
+    cross_button.style.color='red';
+    cross_button.onmouseover=function(){
+      this.style.color="grey";
+    }
+    cross_button.onmouseout=function(){
+      this.style.color="red";
+    }
+    cross_button.onclick=function()
+    {
+      box.style.display='none';
+
+      // var string=this.id;
+      // string=string.substr(0,string.length-1);
+      // var k=document.getElementById(string+"2");
+      // Chatting.removeChild(k);
+    }
+    Chat_head.appendChild(cross_button);
+    Chat_head.style.position='fixed';
+    Chat_head.style.float="right";
+    Chat_head.style.padding='5px';
+    Chat_head.style.backgroundColor='#1187c2';
+    Chat_head.style.color='white';
+    Chat_head.style.width='16vw';
+    Chat_head.style.bottom='21vw';
+    New_Chatbox.appendChild(Chat_head);
+    box.appendChild(New_Chatbox);
+
+    var Chat_bottom=document.createElement("div");
+		Chat_bottom.style.width='16vw';
+		// Chat_bottom.style.border='1px solid black';
+		Chat_bottom.style.color='black';
+		var New_Message=document.createElement("textarea");
+		New_Message.type="text";
+		New_Message.style.width='190px';
+		New_Message.style.height='39px';
+		New_Message.style.borderRadius= '5px';
+		New_Message.style.resize= 'none';
+		New_Message.placeholder="Message";
+		Chat_bottom.appendChild(New_Message);
+		var SEND=document.createElement("button");
+		SEND.className="btn btn-default";
+		SEND.innerHTML="Send";
+    SEND.onclick=function(){
+			// var string=this.id;
+			// var name=string.substr(0,string.length-1);
+			// var massage=document.getElementById(name+"3").value;
+      // alert({{username}});
+      // var a={{username}};
+      // alert(username);
+      var massage=New_Message.value;
+      var myemail=document.getElementById('trick');
+      // alert(myemail.value);
+			socket.emit("chat",{to:email,Message:massage,from:myemail.value});
+			// var data={to:name,Message:to_send,UserName:user.innerText};
+			// var Apple=name;
+			// function1(data,"my",Apple);
+			New_Message.value="";
+		};
+
+		Chat_bottom.appendChild(SEND);
+		Chat_bottom.style.position='fixed';
+		Chat_bottom.style.backgroundColor="blue";
+		Chat_bottom.style.bottom='5px';
+		New_Chatbox.appendChild(Chat_bottom);
+    box.appendChild(New_Chatbox);
+		// var oldChatData={to:Name,UserName:user.innerText};
+		// socket.emit('myChatInBox',oldChatData);
+		// New_Message.addEventListener('keypress',function(event){
+		// 	if(event.keyCode==13)
+		// 		SEND.click();
+		// });
+		var  Chat_area=document.createElement('div');
+		Chat_area.style.backgroundColor="red";
+		// Chat_area.style.position='fixed';
+		Chat_area.style.height='250px';
+		Chat_area.style.width='16vw';
+		Chat_area.id=email;
+		Chat_area.style.overflow="auto";
+		New_Chatbox.appendChild(Chat_area);
+		box.appendChild(New_Chatbox);
+  }
+  // $("b").click(function(){
+  //     $("h2").html("<p class='test'>click me</p>")
+  // });
+   socket.on('online', function(data) {
+
+     var onlinediv=document.getElementById("online_user");
+     // onlinediv.innerHTML=" ";
+     if (data['type']=="person") {
+       // var online_person_name = document.createElement("button");
+       // online_person_name.innerHTML= data['pname'];
+       // onlinediv.appendChild(online_person_name);
+       // var online_person_chat = document.createElement("button");
+       // online_person_chat.innerHTML='Chat';
+       // onlinediv.appendChild(online_person_chat);
+       onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white">'+data['pname']+'</button>';
+       onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white" onclick=\'openchat("'+data['pname']+'","'+data['pemail']+'")\'>Chat</button>';
+      //  online_person_chat.onclick=function(){
+      //    openchat(data['pname']);
+      // };
+        onlinediv.innerHTML+= '<br>';
+     }
+     else if (data['type']=="club") {
+      //  var online_club_name = document.createElement("button");
+      //  online_club_name.innerHTML= data['cname'];
+      //  onlinediv.appendChild(online_club_name);
+      //  var online_club_chat = document.createElement("button");
+      //  online_club_chat.innerHTML='Chating';
+      //  online_club_chat.id=data['cemail'];
+      //  alert(data['cemail'])
+      // //  online_club_chat.onclick=function(){
+      // //    alert("dmvodmvod");
+     	// // 	 // openchat(data['cname']);
+     	// // };
+      //  onlinediv.appendChild(online_club_chat);
+      onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white">'+data['cname']+'</button>';
+      onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white" onclick=\'openchat("'+data['cname']+'","'+data['cemail']+'")\'>Chat</button>';
+       // openchat(data['cname'])
+        onlinediv.innerHTML+= '<br>';
+     }
+
+     // alert(data['name'])
+   });
+
+    socket.on('update_post', function(data) {
+      // alert("post");
+      // var a=document.getElementById('read_post');
+      //   a.innerHTML+=data['post'];
+      //   a.innerHTML+=data['filename']
+      //   s="http://localhost:5000/uploads/"+data['filename']+".png"
+      //   // alert(s)
+      //   a.innerHTML+="<img src=\"http://localhost:5000/uploads/"+data['filename']+"\" width=\"400px\" height=\"150px\">";
+      //   a.innerHTML+="<br>";
+        // socket.emit('my event', {data: 'I\'m connected!'});
+        var div = document.createElement("div");
+        div.style.width = "55vw";
+        // div.style.height = auto;
+        div.style.border = "1px solid black";
+        div.style.borderRadius = "5px";
+        div.style.background = "white";
+        div.style.margin="10px";
+        // div.style.color = "white";
+        // div.innerHTML +="<p style=\"color:red">"+data['author']+"</p>" ;
+        var creater = document.createElement("P");
+        creater.innerHTML=data['dtype'];
+        creater.style.color="red";
+        div.appendChild(creater);
+        // div.innerHTML+="<br>";
+        // var time = document.createElement("P");
+        // creater.innerHTML=data['time'];
+        // creater.style.color="blue";
+        // div.appendChild(time);
+
+        // div.innerHTML+="<p style=\"color=red"> +data['time'] +"</p>";
+        div.innerHTML += data['time'];
+        div.innerHTML+="<br>";
+        div.innerHTML+="<br>";
+        div.innerHTML += data['post'];
+        div.innerHTML+="<br>";
+        // alert(data['filename'])
+        if (data['filename']) {
+          div.innerHTML+="<img src=\"http://localhost:5000/uploads/"+data['filename']+"\" width=\"714px\" >";
+        }
+        var lower=document.createElement("div");
+        var b1=document.createElement("button");
+        b1.className = "fas fa-thumbs-up recommended";
+        b1.innerHTML+=" RECOMMENDED";
+        b1.style.width = "17vw";
+        // b1.style.backgroundColor='white';
+        b1.style.height = "3vw";
+        b1.style.margin="2px";
+        b1.onclick = function(){
+          if (b1.style.backgroundColor=='') {
+              b1.style.backgroundColor='aqua';
+              b2.style.backgroundColor='';
+          }
+          else {
+            b1.style.backgroundColor='';
+          }
+        };
+        lower.appendChild(b1);
+        var b2=document.createElement("button");
+        b2.className = "fas fa-thumbs-down not_recommended";
+        b2.innerHTML+=" NOT RECOMMENDED";
+        b2.style.width = "18vw";
+        b2.style.height = "3vw";
+        b2.style.margin="2px";
+        b2.onclick = function(){
+          if (b2.style.backgroundColor=='') {
+              b2.style.backgroundColor='red';
+              b1.style.backgroundColor='';
+          }
+          else {
+            b2.style.backgroundColor='';
+          }
+        };
+        lower.appendChild(b2);
+        var b3=document.createElement("button");
+        b3.className = "fas fa-comment comment";
+        b3.innerHTML+=" COMMENT"
+        b3.style.width = "17vw";
+        b3.style.height = "3vw";
+        b3.style.margin="2px";
+        lower.appendChild(b3);
+        lower.style.border = "1px solid black";
+        // lower.style.borderRadius = "5px";
+        var commentdiv=document.createElement("div");
+        commentdiv.style.width = "48vw";
+        commentdiv.style.height = "18vw";
+        commentdiv.style.display='none';
+        commentdiv.innerHTML = "HI deepak here u can post your comment";
+        b3.onclick = function(){
+
+
+          if (commentdiv.style.display=='none') {
+            // alert(commentdiv.style.display);
+            commentdiv.style.display='block';
+            lower.appendChild(commentdiv);
+          }
+          else {
+            commentdiv.style.display='none';
+          }
+        };
+        div.appendChild(lower);
+        document.getElementById("read_post").appendChild(div);
+    });
+    function create_post(){
+      post=document.getElementById('new_post')
+      socket.emit('create_post', {post: post.innerHTML,author:{{username}}});
+      // socket.emit('update_post');
+    }
+      socket.on('chat', function(data) {
+        alert("bhai aa gya")
+      });
+</script>
+    <style media="screen">
+      .upper{
+        background-color:violet;
+        /* background:blue; */
+        /* display:inline; */
+        width:98vw;
+        height:4vw
+      }
+      .footer{
+        background-color:black;
+        /* background:blue; */
+        /* display:inline; */
+        width:100vw;
+        height:20vw
+      }
+      .post{
+        height:50vw;
+        width:20vw;
+        float:top;
+        float:left;
+      }
+      .nocursor { cursor:none; }
+      #read_post{
+        /* cursor:none; */
+        height:40vw;
+        width:58vw;
+        overflow:auto;
+        background-color: white;
+      }
+      .online_user{
+        float:top;
+        float:right;
+        height:50vw;
+        width:20vw;
+        background-color:silver;
+      }
+      .body{
+        width:98vw;
+        height:30vw;
+      }
+      .side{
+        float: left;
+        width:20vw;
+        height:60vw;
+        background-color: silver;
+      }
+      .footer{
+        width:100vw;
+        height:10vw;
+      }
+      /* input{background-color:lightblue} */
+    </style>
+    <title>{{ username }}</title>
+  </head>
+  <body>
+    <div class="upper">
+      <form style="margin:10px;" class="" action="{{url_for('index')}}" enctype="multipart/form-data" method="POST">
+        <button style="float:right" type="submit" name="logout">LOGOUT</button>
+      </form>
+
+      <!-- <i style="float:right ;" class="fas fa-sign-out-alt">LOGOUT</i> -->
+      <!-- <label  style="float:right display:'inline none';">hi</label> -->
+        <!-- <label style="float:right;">{{username}}</label> -->
+<!-- <center>Menubar</center> -->
+    </div>
+    <div class="body">
+
+      <div class="side">
+   <center>footer</center>
+      </div>
+
+      <div class="post">
+
+
+       <div class="create_post"  id="read_post">
+         <form style="margin:10px;" class="" action="{{url_for('create_posting')}}" enctype="multipart/form-data" method="POST">
+           <!-- <br> -->
+          <textarea id="new_post" style="resize:none;" name="article" rows="4" cols="40"></textarea>
+          <!-- <input type="text" name="article" value="i am Deepak kumar."> -->
+          <br>
+          <input type="file" name="file" value="">
+          <br>
+          <input style="display:none" type="text" name="author" value={{username}}>
+          <input id="trick" style="display:none" type="text" name="author" value={{email}}>
+          <input style="display:none" type="text" name="authortype" value={{type}}>
+          <input style="background-color:lightblue" type="submit" name="create_post" value="Create post">
+        </form>
+       </div>
+       <!-- <div class="nocursor" id="read_post">
+           <center>POST</center>
+       </div> -->
+
+     </div>
+     <div id="online_user" class="online_user">
+       <center>
+         <!-- newbutton2.className='btn btn-default';
+         newbutton.style.backgroundColor="#26292a";
+         newbutton.style.border="#aeb2b4"; -->
+       <p class="btn btn-default btn-block
+
+
+
+
+
+
+
+
+
+
+
+       "style="color:red;background-Color:black;">ONLINE</p>
+       </center>
+       <!-- <i class="fas fa-thumbs-up"></i> -->
+     </div>
+
+     <div id="chatbox" style="display: none;bottom:0%;right:3%;background-color: white;height: 300px;width: 16vw;z-index: 1;position:fixed" class="online_user">
+       <!-- depakdvcydhbjkmc -->
+     </div>
+
+
+   </div>
+
+   <!-- <div class="footer"> -->
+<!-- <center>footer</center> -->
+   <!-- </div> -->
+
+  </body>
+</html>

@@ -1,0 +1,200 @@
+<!doctype html>
+<head>
+  <script type="text/javascript">
+    function givesignupform(){
+      var a=document.getElementById('signupchoice')
+      if ((a.value)=='student') {
+
+          var b=document.getElementById('signupformforstudent')
+          var c=document.getElementById('signupformforclub')
+          c.style.display='';
+          if ((b.style.display)=='') {
+              // alert("vmdvi")
+              b.style.display='block';
+          }
+          // alert(b.style.display)
+      }
+      else if ((a.value)=='club') {
+        var b=document.getElementById('signupformforstudent')
+        var c=document.getElementById('signupformforclub')
+        b.style.display='';
+        if ((c.style.display)=='') {
+            // alert("vmdvi")
+            c.style.display='block';
+        }
+      }
+      // alert(a.value)
+    }
+    function givesigninform(){
+      var a=document.getElementById('signinchoice')
+      if ((a.value)=='student') {
+
+          var b=document.getElementById('signinformforstudent')
+          var c=document.getElementById('signinformforclub')
+          c.style.display='';
+          if ((b.style.display)=='') {
+              // alert("vmdvi")
+              b.style.display='block';
+          }
+          // alert(b.style.display)
+      }
+      else if ((a.value)=='club') {
+        var b=document.getElementById('signinformforstudent')
+        var c=document.getElementById('signinformforclub')
+        b.style.display='';
+        if ((c.style.display)=='') {
+            // alert("vmdvi")
+            c.style.display='block';
+        }
+      }
+      // alert(a.value)
+    }
+  </script>
+  <style media="screen">
+    body {background-color: powderblue;}
+    h1 {color:red;}
+    input{background-color:white;}
+    /* form {alignment:center;} */
+    #signin{
+      float:top;
+      float:right;
+      /* display: inline-block; */
+       /* background-color:red; */
+    }
+    #signup{
+      display: inline-block;
+    }
+    #signupformforstudent{
+      display:none;
+    }
+    #signupformforclub{
+      display:none;
+    }
+    #signinformforstudent{
+      display:none;
+    }
+    #signinformforclub{
+      display:none;
+    }
+  </style>
+</head>
+<title>Signup/Signin</title>
+
+<center>
+  <i>
+<h1>LETS MAKE IT ANONAMOUS</h1>
+<!-- <h1>POWER HELPER</h1> -->
+  </i>
+<h4>-made for helping</h4>
+</center>
+
+<body>
+  <!-- <center> -->
+  <!-- <div class="">
+
+  </div> -->
+
+  <div id="signup">
+
+    <label for="">Signup as a </label>
+    <select id="signupchoice">
+    <option value="student">Person</option>
+    <option value="club">Club</option>
+    </select>
+    <button id="signupchoicebutton" type="button" name="button" onclick="givesignupform()">Submit</button>
+
+  <form id="signupformforstudent" action="{{url_for('signupforstudent')}}" method="POST">
+     <label for="">Name</label>
+     <br>
+     <input type="text" name="name" value="2" required>
+     <br>
+     <label for="">Type</label>
+     <select name="persontype">
+     <option value="student">Student</option>
+     <option value="alumuni">Alumuni</option>
+     <option value="faculty">Faculty</option>
+     <option value="staff">Staff</option>
+     </select>
+     <br>
+     <label for="">Email</label>
+     <br>
+     <input type="email" name="email" value="b17086@student.iitmandi.ac.in" required>
+     <br>
+     <label for="">Password</label>
+     <br>
+     <input type="password" name="password1" value="hi123" required>
+     <br>
+     <label for="">confirm password</label>
+     <br>
+     <input type="password" name="password2" value="hi123" required>
+     <br>
+     <button type="submit" name="Signup">Signup</button>
+  </form>
+  <form id="signupformforclub" action="{{url_for('signupforclub')}}" method="POST">
+     <!-- <label for="">ClubId</label>
+     <br>
+     <input type="text" name="clubid" value="2" required> -->
+     <!-- <br> -->
+     <label for="">ClubName</label>
+     <br>
+     <input type="text" name="name" value="programmings" required>
+     <br>
+     <label for="">ClubType</label>
+     <select name="clubtype">
+     <option value="technical">Technical</option>
+     <option value="social">Social</option>
+     <option value="cultural">Cultural</option>
+     </select>
+     <br>
+     <label for="">ClubEmail</label>
+     <br>
+     <input type="email" name="email" value="programmings@iitmandi.ac.in" required>
+     <br>
+     <!-- <label for="">ClubName</label>
+     <br>
+     <input type="text" name="username" value="2" required>
+     <br> -->
+     <label for="">Password</label>
+     <br>
+     <input type="password" name="password1" value="hi234" required>
+     <br>
+     <label for="">confirm password</label>
+     <br>
+     <input type="password" name="password2" value="hi234" required>
+     <br>
+     <button type="submit" name="Signup">Signup</button>
+  </form>
+  </div>
+  <!-- </center> -->
+  <div id="signin">
+    <label for="">Signin as a </label>
+  <select id="signinchoice">
+   <option value="student">Student</option>
+   <option value="club">Club</option>
+  </select>
+  <button id="signinchoicebutton" type="button" name="button" onclick="givesigninform()">Submit</button>
+
+    <form id="signinformforstudent" action="{{url_for('signinstudent')}}" method="POST">
+       <label for="">email</label>
+       <br>
+       <input type="text" name="email" value="b17086@student.iitmandi.ac.in" required>
+       <br>
+       <label for="">Password</label>
+       <br>
+       <input type="password" name="password" value="hi123" required>
+       <br>
+       <button type="submit" name="Signup">Signin</button>
+    </form>
+    <form id="signinformforclub" action="{{url_for('signinclub')}}" method="POST">
+       <label for="">ClubEmail</label>
+       <br>
+       <input type="email" name="email" value="programmings@iitmandi.ac.in" required>
+       <br>
+       <label for="">Password</label>
+       <br>
+       <input type="password" name="password" value="hi234" required>
+       <br>
+       <button type="submit" name="Signup">Signin</button>
+    </form>
+  </div>
+</body>

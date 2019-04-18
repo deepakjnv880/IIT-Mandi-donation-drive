@@ -1,0 +1,16 @@
+insert into table aircraft(id,name,lmane,rollno) VALUES (1,’Boeing 747-400',8430);
+insert into table aircraft(id,name,lmane,rollno) VALUES (2,’Boeing 747-401',8431);
+insert into table aircraft(id,name,lmane,rollno) VALUES (3,’Boeing 747-402',8432);
+insert into table aircraft(id,name,lmane,rollno) VALUES (4,’Boeing 747-403',8433);
+insert into table aircraft(id,name,lmane,rollno) VALUES (5,’Boeing 747-404',8434);
+insert into table aircraft(id,name,lmane,rollno) VALUES (6,’Boeing 747-405',8435);
+insert into table aircraft(id,name,lmane,rollno) VALUES (7,’Boeing 747-406',8436);
+insert into table aircraft(id,name,lmane,rollno) VALUES (8,’Boeing 747-407',8437);
+insert into table aircraft(id,name,lmane,rollno) VALUES (9,’Boeing 747-408',8438);
+insert into table aircraft(id,name,lmane,rollno) VALUES (10,’Boeing 747-409',8439);
+insert into table aircraft(id,name,lmane,rollno) VALUES (11,’Boeing 747-410',8440);
+insert into table aircraft(id,name,lmane,rollno) VALUES (12,’Boeing 747-411',8441);
+insert into table aircraft(id,name,lmane,rollno) VALUES (13,’Boeing 747-412',8442);
+insert into table aircraft(id,name,lmane,rollno) VALUES (14,’Boeing 747-413',8443);
+insert into table aircraft(id,name,lmane,rollno) VALUES (15,’Boeing 747-414',8444);
+insert into table aircraft(id,name,lmane,rollno) VALUES (16,’Boeing 747-415',8445);
