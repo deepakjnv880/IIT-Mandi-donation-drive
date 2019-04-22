@@ -5,7 +5,7 @@ CS309 IDS PROJECT
 GROUP NUMBER 12
 1.DEEPAK KUMAR(B17039)
 2.VINAY KUMAR(B17068)
-3.VAIBHAV SAHINI(B17066)
+3.VAIBHAV SAINI(B17066)
 4.SURAJ KUMAR(B17064)
 Project idea:-
 This project is based on donation between people belongs to IIT Mandi and Club running in IIT
