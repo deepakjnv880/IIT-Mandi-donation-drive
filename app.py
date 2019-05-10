@@ -1,7 +1,9 @@
 from flask import Flask,render_template,url_for,request,redirect
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO, send, emit
-# from flask_socketio import SocketIO
+from flask_socketio import join_room, leave_room
+from flask_socketio import SocketIO
+from flask import session
 import datetime
 import json
 from flask import jsonify
@@ -9,6 +11,8 @@ import os
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
 import logging
+import Checksum
+import cgi
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
@@ -17,6 +21,9 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+user={}
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -162,6 +169,7 @@ def signupforclub():
 
 @app.route('/test3',methods=['POST'])
 def signinstudent():
+    # print(" =))))))))))))))))))))))---------------=",session.id)
     email=request.form['email']
     password=request.form['password']
     a=email
@@ -204,12 +212,29 @@ def signinclub():
         # return 'not succesfuull'
         # return redirect(url_for('index'))
 
+users={}
+
 @app.route('/<type>/<username>/<email>/',methods=['POST','GET'])
 def account(username,type,email):
     # handle_message(email)
-    # print(" =))))))))))))))))))))))---------------=")
+    if (type=="student"):
+        cur = mysql.connection.cursor()
+        cur.execute("select `pname` from person where pemail=%s;",(email,));
+        mysql.connection.commit();
+        myresult = cur.fetchall()
+        print("============================account==============================",myresult[0][0]);
+
+    if (type=="club"):
+        cur = mysql.connection.cursor()
+        cur.execute("select `cname` from club where cemail=%s;",(email,));
+        mysql.connection.commit();
+        myresult = cur.fetchall()
+        print("============================account==============================",myresult[0][0]);
+
     # users[email] = request.sid
-    return render_template('account.html',username=username,type=type,email=email)
+
+    # users['b17039@student.iitmandi.ac.in']=request.id
+    return render_template('account.html',username=username,type=type,email=email,name=myresult[0][0])
 
 # @app.route('/user/<username>',methods=['POST','GET'])
 # def create_post(username):
@@ -224,6 +249,7 @@ def handle_message(email,):
 @app.route('/temp',methods=['POST','GET'])
 def create_posting():
     postere=request.form['article']
+    email=request.form['authoremail']
     author=request.form['author']
     authortype=request.form['authortype']
     now = datetime.datetime.now()
@@ -244,17 +270,17 @@ def create_posting():
             if (author=="nss"):
                 cur.execute("INSERT INTO blog(pemail,cemail,dtype,post,time) VALUES(%s,%s,%s,%s,%s)",("anyone",author,"social",postere,str(now)));
                 mysql.connection.commit();
-                return redirect(url_for('account',username=author,type=authortype))
+                return redirect(url_for('account',username=author,type=authortype,email=email))
 
             if (authortype=="student"):
                 cur.execute("INSERT INTO blog(pemail,cemail,dtype,post,time) VALUES(%s,%s,%s,%s,%s)",(author,"nss","daily_use_item",postere,str(now)));
                 mysql.connection.commit();
-                return redirect(url_for('account',username=author,type=authortype))
+                return redirect(url_for('account',username=author,type=authortype,email=email))
             else:
                 if (authortype=="club"):
                     cur.execute("INSERT INTO blog(pemail,cemail,dtype,post,time) VALUES(%s,%s,%s,%s,%s)",("Alumuni",author,"club_requirement",postere,str(now)));
                     mysql.connection.commit();
-                    return redirect(url_for('account',username=author,type=authortype))
+                    return redirect(url_for('account',username=author,type=authortype,email=email))
 
         file = request.files['file']
         # if user does not select file, browser also
@@ -266,16 +292,16 @@ def create_posting():
             if (author=="nss"):
                 cur.execute("INSERT INTO blog(pemail,cemail,dtype,post,time) VALUES(%s,%s,%s,%s,%s)",("anyone",author,"social",postere,str(now)));
                 mysql.connection.commit();
-                return redirect(url_for('account',username=author,type=authortype))
+                return redirect(url_for('account',username=author,type=authortype,email=email))
             if (authortype=="student"):
                 cur.execute("INSERT INTO blog(pemail,cemail,dtype,post,time) VALUES(%s,%s,%s,%s,%s)",(author,"nss","daily_use_item",postere,str(now)));
                 mysql.connection.commit();
-                return redirect(url_for('account',username=author,type=authortype))
+                return redirect(url_for('account',username=author,type=authortype,email=email))
             else:
                 if (authortype=="club"):
                     cur.execute("INSERT INTO blog(pemail,cemail,dtype,post,time) VALUES(%s,%s,%s,%s,%s)",("Alumuni",author,"club_requirement",postere,str(now)));
                     mysql.connection.commit();
-                    return redirect(url_for('account',username=author,type=authortype))
+                    return redirect(url_for('account',username=author,type=authortype,email=email))
             # cur.execute("INSERT INTO blog(author,post,time) VALUES(%s,%s,%s)",(author,postere,str(now)));
             # mysql.connection.commit();
             # flash('No selected file')
@@ -308,12 +334,12 @@ def create_posting():
             print(os.path)
             # print(send_from_directory(app.config['UPLOAD_FOLDER'],filename))
             # print("**************************************************************==================2")
-            return redirect(url_for('account',username=author,type=authortype))
-    return redirect(url_for('account',username=author,type=authortype));
+            return redirect(url_for('account',username=author,type=authortype,email=email))
+    return redirect(url_for('account',username=author,type=authortype,email=email));
 
 @socketio.on('update_post')
 def update_post():
-    print("svybnmo,xposd v bnmodicdomvomeov")
+    # print("svybnmo,xposd v bnmodicdomvomeov")
     # now = datetime.datetime.now()
     # print('- =- =-= -= '+str(data['post'])+' - == -++ '+str(data['author'])+str(now))
     cur = mysql.connection.cursor()
@@ -340,8 +366,8 @@ def update_post():
         socketio.emit('update_post', p)
 
 @socketio.on('online')
-def online():
-    # print("=======================online============================================")
+def online(data):
+    print("=======================online============================================ ",data['me'])
     cur = mysql.connection.cursor()
     # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
     cur.execute("select json_object('pname',`pname`,'pemail',`pemail`) from person where online=1;");
@@ -365,7 +391,9 @@ def online():
         p = json.loads(x[0]);
         p['type'] = 'person'
         # print(p["post"])
-        socketio.emit('online', p)
+        room = users[data['me']]
+        emit('online', p, room=room)
+        # socketio.emit('online', p)
 
     # print("=======================online============================================")
     cur = mysql.connection.cursor()
@@ -391,15 +419,24 @@ def online():
         p = json.loads(x[0]);
         p['type'] = 'club'
         # print(p["post"])
-        socketio.emit('online', p)
+        room = users[data['me']]
+        emit('online', p, room=room)
 
-users={}
-# users['b17039@student.iitmandi.ac.in']=socketio
+
 
 @socketio.on('chat')
 def chat(data):
-    print("==-=-=======-=------------------================= ",data['to'])
-    emit('chat', data['to'], room=users[data['to']])
+    print("==-=-=======-=---------chat---------================= ",data['from'])
+    # cur = mysql.connection.cursor()
+    # # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
+    # cur.execute("select json_object('pname',`pname`,'pemail',`pemail`) from person where online=1;");
+    # # cur.execute("select json_object('did',`did`,'pemail',`pemail`,'cemail',`cemail`,'dtype',`dtype`,'time',`time`,'post',`post`,'filename',`filename`) from blog;");
+    # mysql.connection.commit();
+    # myresult = cur.fetchall()
+    # room = session.get(data['to'])
+    room=users[data['to']]
+    print(room)
+    emit('chat', data, room=room)
 
     # users[data['to']].emit('chat',data)
 
@@ -407,10 +444,15 @@ def chat(data):
 
 # io=socket(server);
 
-# @socketio.on('connect')
-# def connect(data):
-#     print(data['me']," =))))))))))))))))))))))---------------=",request.sid)
-#     users[data['me']] = request.sid
+@socketio.on('makeroom')
+def makeroom(data):
+    print(request.sid,"==fghbjnkml,============= ",data['me'])
+    users[data['me']] = request.sid
+    # room = session.get(data['me'])
+    # print("room ============================ ",room)
+    # join_room(room)
+    # print(data['me']," =))))))))))))))))))))))---------------=",request.sid)
+    # users[data['me']] = request.sid
     # print("vorvm")
 	# data.email=NAME;
 	# console.log('Connection Made by '+NAME)
@@ -418,3 +460,57 @@ def chat(data):
 	# # con.query(session,[data.email,NAME])
 	# if(data.name!==''):
     #     users[data.email]=socket
+
+@app.route('/paymentformi/paytm/doing/for_us/',methods=['GET'])
+def paymentform():
+    return render_template('payment/payment_details.html')
+
+
+
+
+# MERCHANT_KEY = 'fADQZI57666205989648'
+MERCHANT_KEY = 'notmade'
+@app.route('/shop/',methods=['POST'])
+def shop():
+    name=request.form['name']
+    email=request.form['email']
+    paytmno=request.form['paytmno']
+    amount=request.form['amount']
+    # password1=request.form['password1']
+    # password2=request.form['password2']
+    print(name,email,paytmno,amount)
+    deepak_dict = {
+
+                'MID': 'notmade',
+                'ORDER_ID': str(12345),
+                'TXN_AMOUNT': str(amount),
+                'CUST_ID': email,
+                'INDUSTRY_TYPE_ID': 'Retail',
+                'WEBSITE': 'WEBSTAGING',
+                'CHANNEL_ID': 'WEB',
+                'CALLBACK_URL':'http://localhost:5000/shop/handlerequest/',
+
+        }
+    deepak_dict['CHECKSUMHASH'] = Checksum.generate_checksum(deepak_dict, MERCHANT_KEY)
+    return render_template('payment/paytm.html', deepak_dict=deepak_dict)
+
+@app.route('/shop/handlerequest/',methods=['POST'])
+def shop_handlerequest():
+    # paytm will send you post request here
+
+    checksum=NULL
+    form = cgi.FieldStorage()
+    response_dict = {}
+    for i in form.keys():
+        response_dict[i] = form[i]
+        if i == 'CHECKSUMHASH':
+            checksum = form[i]
+    print("=--------------response of paytm----------------= ",response_dict)
+    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+    if verify:
+        if response_dict['RESPCODE'] == '01':
+            print('order successful')
+        else:
+            print('order was not successful because' + response_dict['RESPMSG'])
+    # return render(request, 'shop/paymentstatus.html', {'response': response_dict})
+    return render_template('paytm_response.html',response=response_dict)
