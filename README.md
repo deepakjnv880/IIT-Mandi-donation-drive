@@ -1,7 +1,7 @@
 # IDS
-#### Donation drive IIT MANDI
+#### Donation Drive IIT MANDI
 
-CS309 IDS PROJECT <br />
+##### CS309 IDS PROJECT
 GROUP NUMBER 12  <br />
 1.DEEPAK KUMAR(B17039) <br />
 2.VINAY KUMAR(B17068) <br />
