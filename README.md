@@ -1,5 +1,5 @@
 # IDS
-Donation drive IIT MANDI
+###Donation drive IIT MANDI
 
 CS309 IDS PROJECT <br />
 GROUP NUMBER 12  <br />
