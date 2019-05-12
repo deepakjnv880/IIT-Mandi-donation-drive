@@ -11,12 +11,12 @@ Project idea:-   <br />
 This project is based on donation between people belongs to IIT Mandi and Club running in IIT
 Mandi including NSS.Here people can donate money,blood, daily use items. <br />
 Implementation details(platform and technology):- <br />
-1.Flask(a python framework)
-2.mysql
-3. HTML/CSS/Bootstrap/Javascript/JSON
-4.Webscraping
-5.websocket
-6.hashing and salting of password for security reason
-7.transaction security
-8.Datasets availability:-
+1.Flask(a python framework)  
+2.mysql  
+3. HTML/CSS/Bootstrap/Javascript/JSON  
+4.Webscraping  
+5.websocket  
+6.hashing and salting of password for security reason  
+7.transaction security  
+8.Datasets availability:-  
 9.All data are available except Did and other details we can get from IIT Mandi website.
