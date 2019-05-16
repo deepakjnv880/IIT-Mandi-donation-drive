@@ -1,4 +1,5 @@
 from flask import Flask,render_template,url_for,request,redirect
+import requests
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO, send, emit
 from flask_socketio import join_room, leave_room
@@ -13,6 +14,8 @@ from flask import send_from_directory
 import logging
 import Checksum
 import cgi
+import base64
+import random
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
@@ -468,8 +471,9 @@ def paymentform():
 
 
 
-# MERCHANT_KEY = 'fADQZI57666205989648'
-MERCHANT_KEY = 'notmade'
+MERCHANT_ID = 'MERCHANT_ID'
+MERCHANT_KEY='merchant_key'
+# MERCHANT_KEY = 'notmade'
 @app.route('/shop/',methods=['POST'])
 def shop():
     name=request.form['name']
@@ -481,8 +485,8 @@ def shop():
     print(name,email,paytmno,amount)
     deepak_dict = {
 
-                'MID': 'notmade',
-                'ORDER_ID': str(12345),
+                'MID': MERCHANT_ID,
+                'ORDER_ID': str(random.randint(1,21)),
                 'TXN_AMOUNT': str(amount),
                 'CUST_ID': email,
                 'INDUSTRY_TYPE_ID': 'Retail',
@@ -496,21 +500,71 @@ def shop():
 
 @app.route('/shop/handlerequest/',methods=['POST'])
 def shop_handlerequest():
-    # paytm will send you post request here
+    print(request.form)
+    data = request.form.to_dict()
+    check=0
+    for i in data.keys():
+        print(i)
+        if i=='CHECKSUMHASH':
+            check=1
 
-    checksum=NULL
-    form = cgi.FieldStorage()
-    response_dict = {}
-    for i in form.keys():
-        response_dict[i] = form[i]
-        if i == 'CHECKSUMHASH':
-            checksum = form[i]
-    print("=--------------response of paytm----------------= ",response_dict)
-    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+    if 'GATEWAYNAME' in data:
+        if data['GATEWAYNAME'] == 'WALLET':
+            data['BANKNAME'] = 'null';  #If Gateway is user's paytm wallet setting bankname to null
+
+    if check==1:
+        verify = Checksum.verify_checksum(data, MERCHANT_KEY, data['CHECKSUMHASH']) # returns true or false based on calculations
+    else:
+        verify=False
+
+    print(verify)
+
     if verify:
-        if response_dict['RESPCODE'] == '01':
-            print('order successful')
+        if data['RESPCODE'] == '01':
+            print("order successful")
         else:
-            print('order was not successful because' + response_dict['RESPMSG'])
-    # return render(request, 'shop/paymentstatus.html', {'response': response_dict})
-    return render_template('paytm_response.html',response=response_dict)
+            print("order unsuccessful because"+data['RESPMSG'])
+    else:
+        print("order unsuccessful because"+data['RESPMSG'])
+    return render_template('payment/paytm_response.html',response=data)
+
+def inc():
+    print("-=---------------------------------------------------------=-")
+    return 1
+
+@socketio.on('chat')
+def chat(data):
+    print("==-=-=======-=---------chat---------================= ",data['from'])
+    # cur = mysql.connection.cursor()
+    # # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
+    # cur.execute("select json_object('pname',`pname`,'pemail',`pemail`) from person where online=1;");
+    # # cur.execute("select json_object('did',`did`,'pemail',`pemail`,'cemail',`cemail`,'dtype',`dtype`,'time',`time`,'post',`post`,'filename',`filename`) from blog;");
+    # mysql.connection.commit();
+    # myresult = cur.fetchall()
+    # room = session.get(data['to'])
+    room=users[data['to']]
+    print(room)
+    emit('chat', data, room=room)
+
+    # users[data['to']].emit('chat',data)
+
+
+
+# io=socket(server);
+
+@socketio.on('insert_in_social_blog')
+def insert_in_social_blog(data):
+    print(request.sid,"==fghbjnkml,============= ",data['me'])
+    users[data['me']] = request.sid
+    # room = session.get(data['me'])
+    # print("room ============================ ",room)
+    # join_room(room)
+    # print(data['me']," =))))))))))))))))))))))---------------=",request.sid)
+    # users[data['me']] = request.sid
+    # print("vorvm")
+	# data.email=NAME;
+	# console.log('Connection Made by '+NAME)
+	# # var session='UPDATE user SET SessionID=? where Name=?';
+	# # con.query(session,[data.email,NAME])
+	# if(data.name!==''):
+    #     users[data.email]=socket
