@@ -471,8 +471,8 @@ def paymentform():
 
 
 
-MERCHANT_ID = 'MERCHANT_ID'
-MERCHANT_KEY='merchant_key'
+MERCHANT_ID = ''
+MERCHANT_KEY=''
 # MERCHANT_KEY = 'notmade'
 @app.route('/shop/',methods=['POST'])
 def shop():
@@ -486,7 +486,7 @@ def shop():
     deepak_dict = {
 
                 'MID': MERCHANT_ID,
-                'ORDER_ID': str(random.randint(1,21)),
+                'ORDER_ID': str(random.randint(1,2000)),
                 'TXN_AMOUNT': str(amount),
                 'CUST_ID': email,
                 'INDUSTRY_TYPE_ID': 'Retail',
@@ -568,3 +568,12 @@ def insert_in_social_blog(data):
 	# # con.query(session,[data.email,NAME])
 	# if(data.name!==''):
     #     users[data.email]=socket
+
+@socketio.on('insert_in_daily_use_item')
+def insert_in_daily_use_item(data):
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    # print(data.keys(0))
+    # cur = mysql.connection.cursor()
+    # cur.execute('CREATE TABLE IF NOT EXISTS daily_use_item(blog_id int NOT NULL,userid varchar(100),recommended int,not_recommended int,comment varchar(100),time varchar(100));')
+    # cur.execute("INSERT INTO daily_use_item(blog_id,userid,recommended,not_recommended,comment,time) VALUES(%s,%s,%s,%s,%s,%s)",(author,"nss","daily_use_item",postere,str(now),[a]));
+    # mysql.connection.commit();
