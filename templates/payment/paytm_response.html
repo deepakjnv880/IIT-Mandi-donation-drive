@@ -1,24 +1,50 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <style media="screen">
+    table, th, td {
+border: 1px solid red;
+}
+    </style>
     <meta charset="utf-8">
     <title></title>
   </head>
-  <body>
+  <body style="background-color:white">
 
     <div class="container">
-        {{response}}
-        <div class="col my-4">
+      <center>
+      <table style="margin-top:10vw;width:40%;color:blue;">
+ <tr>
+   <th>ORDERID</th>
+   <th>{{response.ORDERID}}</th>
+ </tr>
+ <tr>
+   <th>TXNID</th>
+   <th>{{response.TXNID}}</th>
+ </tr>
+ <tr>
+   <th>TXNAMOUNT</th>
+   <th>{{response.TXNAMOUNT}}</th>
+ </tr>
+ <tr>
+   <th>TXNDATE</th>
+   <th>{{response.TXNDATE}}</th>
+ </tr>
+ <tr>
+   <th>BANKTXNID</th>
+   <th>{{response.BANKTXNID}}</th>
+ </tr>
+ <tr>
+   <th>BANKNAME</th>
+   <th>{{response.BANKNAME}}</th>
+ </tr>
+ <tr>
+   <th>STATUS</th>
+   <th>{{response.STATUS}}</th>
+ </tr>
+</table>
 
-            <h2>Payment status regarding your order Id {{response.ORDERID}}</h2>
-            {% if response.RESPCODE == '01' %}
-            ORDER SUCCESS
-            {% else %}
-            ORDER FAILURE
-            {% endif%}
-
-        </div>
-
+</center>
     </div>
 
     <script>

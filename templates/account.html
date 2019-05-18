@@ -13,7 +13,7 @@
  //
  // }
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-
+var check=-1;
 socket.on('connect', function() {
   // alert("inbuild or io.connect => conenction");
   var myemail=document.getElementById('trick');
@@ -42,136 +42,7 @@ socket.on('connect', function() {
 
 //
 
-  function openchat(name,email){
-    // alert("bsdk");
-    // alert(email);
-    // alert(name);
-    var box=document.getElementById('chatbox');
-    // alert(box.style.display);
-    if (box.style.display=='none') {
-    box.style.display='inline-block';
-    }
-    var New_Chatbox=document.createElement("div");
-    // var Name_box=name;
-    // New_Chatbox.style.marginRight='10px';
-    // New_Chatbox.style.marginLeft='10px';
 
-    var Chat_head=document.createElement("div");
-    Chat_head.innerHTML='<a style="color:white">'+name+'</a>';
-    var cross_button=document.createElement('span');
-    // cross_button.id=Name+"X";
-    cross_button.className="glyphicon glyphicon-remove";
-    cross_button.style.position='relative';
-    cross_button.style.float='right';
-    cross_button.style.color='red';
-    cross_button.onmouseover=function(){
-      this.style.color="grey";
-    }
-    cross_button.onmouseout=function(){
-      this.style.color="red";
-    }
-    cross_button.onclick=function()
-    {
-      box.style.display='none';
-
-      // var string=this.id;
-      // string=string.substr(0,string.length-1);
-      // var k=document.getElementById(string+"2");
-      // Chatting.removeChild(k);
-    }
-    Chat_head.appendChild(cross_button);
-    Chat_head.style.position='fixed';
-    Chat_head.style.float="right";
-    Chat_head.style.padding='5px';
-    Chat_head.style.backgroundColor='#1187c2';
-    Chat_head.style.color='white';
-    Chat_head.style.width='16vw';
-    Chat_head.style.bottom='21vw';
-    New_Chatbox.appendChild(Chat_head);
-    box.appendChild(New_Chatbox);
-
-    var Chat_bottom=document.createElement("div");
-		Chat_bottom.style.width='16vw';
-		// Chat_bottom.style.border='1px solid black';
-		Chat_bottom.style.color='black';
-		var New_Message=document.createElement("textarea");
-		New_Message.type="text";
-		New_Message.style.width='190px';
-		New_Message.style.height='39px';
-		New_Message.style.borderRadius= '5px';
-		New_Message.style.resize= 'none';
-		New_Message.placeholder="Message";
-		Chat_bottom.appendChild(New_Message);
-		var SEND=document.createElement("button");
-		SEND.className="btn btn-default";
-		SEND.innerHTML="Send";
-    SEND.onclick=function(){
-			// var string=this.id;
-			// var name=striil=document.getElementById('trick');
-          // alert(myemail.value)
-          // var onlineID = "online".concat(myemail.value);
-          //
-          // var area=docng.substr(0,string.length-1);
-			// var massage=document.getElementById(name+"3").value;
-      // alert({{username}});
-      // var a={{username}};
-      // alert(username);
-      var massage=New_Message.value;
-      var myemail=document.getElementById('trick');
-      var myname=document.getElementById('trickname');
-
-
-      // openchat(data['name'],data['from']);
-      // var onlineID = "chat".concat(data['from']);
-      // var area=document.getElementById(onlineID);
-      Chat_area.innerHTML+="<br>";
-      Chat_area.innerHTML+="<br>";
-      // area.innerHTML+="<br>";
-      // area.innerHTML+=data['Message'];
-
-
-      var my=document.createElement("textarea");
-      my.type="text";
-      my.style.width='100px';
-      my.style.height='30px';
-      my.style.borderRadius= '5px';
-      my.style.resize= 'none';
-      my.style.backgroundColor= 'blue';
-      my.style.float='right';
-      my.value=massage;
-      my.readOnly=true;
-      Chat_area.appendChild(my);
-
-      // alert(myemail.value);
-			socket.emit("chat",{to:email,Message:massage,from:myemail.value,name:myname.value});
-			// var data={to:name,Message:to_send,UserName:user.innerText};
-			// var Apple=name;
-			// function1(data,"my",Apple);
-			New_Message.value="";
-		};
-
-		Chat_bottom.appendChild(SEND);
-		Chat_bottom.style.position='fixed';
-		Chat_bottom.style.backgroundColor="blue";
-		Chat_bottom.style.bottom='5px';
-		New_Chatbox.appendChild(Chat_bottom);
-    box.appendChild(New_Chatbox);
-		// var oldChatData={to:Name,UserName:user.innerText};
-		// socket.emit('myChatInBox',oldChatData);
-		// New_Message.addEventListener('keypress',function(event){
-		// 	if(event.keyCode==13)
-		// 		SEND.click();
-		// });
-		var  Chat_area=document.createElement('div');
-		Chat_area.style.backgroundColor="red";
-		Chat_area.style.color="black";
-		Chat_area.style.height='200px';
-		Chat_area.style.width='16vw';
-		Chat_area.id="chat".concat(email);
-		Chat_area.style.overflow="auto";
-		New_Chatbox.appendChild(Chat_area);
-		box.appendChild(New_Chatbox);
-  }
   // $("b").click(function(){
   //     $("h2").html("<p class='test'>click me</p>")
   // });
@@ -184,7 +55,7 @@ socket.on('connect', function() {
        // alert(value);
        onlinediv.innerHTML+='<button id='+onlineID+' style="text-decoration:none;background-color:black; color:white" value='+data['pname']+'>'+data['pname']+'</button>';
        onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white" onclick=\'openchat("'+data['pname']+'","'+data['pemail']+'")\'>Chat</button>';
-// alert("cjdncikmc");
+       // alert("cjdncikmc");
        // var online_person_name = document.createElement("button");
        // online_person_name.style.backgroundColor="black";
        // online_person_name.style.color="white";
@@ -238,6 +109,7 @@ socket.on('connect', function() {
 socket.on('update_post', function(data) {
       // alert(data['did']);
   if (data['dtype']==="daily_use_item") {
+        // data[di]
         var div = document.createElement("div");
         div.style.width = "55vw";
         // div.style.height = auto;
@@ -273,6 +145,7 @@ socket.on('update_post', function(data) {
           if (b1.style.backgroundColor=='') {
               b1.style.backgroundColor='aqua';
               b2.style.backgroundColor='';
+              // socket.emit('insert_in_social_blog',{recommended:1,Message:massage,from:myemail.value,name:myname.value});
           }
           else {
             b1.style.backgroundColor='';
@@ -303,6 +176,14 @@ socket.on('update_post', function(data) {
         b3.style.margin="2px";
         lower.appendChild(b3);
 
+        var commentdiv=document.createElement("div");
+        commentdiv.style.width = "48vw";
+        commentdiv.style.height = "18vw";
+        commentdiv.style.display='none';
+        commentdiv.innerHTML = "HI deepak here u can post your comment";
+        lower.appendChild(commentdiv);
+
+        var createcommentdiv=document.createElement("div");
         var b4=document.createElement("textarea");
         b4.ID = "create_comment";
         b4.placeholder=" Write a comment...";
@@ -310,32 +191,35 @@ socket.on('update_post', function(data) {
         b4.rows = 1;
         b4.style.resize='none';
         b4.style.margin="2px";
-        lower.appendChild(b4);
+        createcommentdiv.appendChild(b4);
 
         var b5=document.createElement("button");
         // b5.className = "fas fa-comment comment";
         b5.innerHTML="POST";
         b5.style.cssFloat = "right";
         b5.style.marginRight="25px";
+        b5.onclick=function(){
+          // alert(data['did']);
+          socket.emit('insert_in_daily_use_item',{blog_id:data['did'],comment:b4.value});
+          b4.value='';
+        }
         // b5.style.height = "3vw";
         // b5.style.margin="2px";
-        lower.appendChild(b5);
-
+        createcommentdiv.appendChild(b5);
+        // lower.appendChild(b5);
+         lower.appendChild(createcommentdiv);
 
         lower.style.border = "1px solid black";
         // lower.style.borderRadius = "5px";
-        var commentdiv=document.createElement("div");
-        commentdiv.style.width = "48vw";
-        commentdiv.style.height = "18vw";
-        commentdiv.style.display='none';
-        commentdiv.innerHTML = "HI deepak here u can post your comment";
+
         b3.onclick = function(){
 
 
           if (commentdiv.style.display=='none') {
-            // alert(commentdiv.style.display);
+            alert("commentdisdcy");
+            // createcommentdiv.style.display='none';
             commentdiv.style.display='block';
-            lower.appendChild(commentdiv);
+            // lower.appendChild(commentdiv);
           }
           else {
             commentdiv.style.display='none';
@@ -409,6 +293,13 @@ socket.on('update_post', function(data) {
     b3.style.margin="2px";
     lower.appendChild(b3);
 
+    var commentdiv=document.createElement("div");
+    commentdiv.style.width = "48vw";
+    commentdiv.style.height = "18vw";
+    commentdiv.style.display='none';
+    commentdiv.innerHTML = "HI deepak here u can post your comment";
+    lower.appendChild(commentdiv);
+
     var b4=document.createElement("textarea");
     b4.ID = "create_comment";
     b4.placeholder=" Write a comment...";
@@ -430,18 +321,18 @@ socket.on('update_post', function(data) {
 
     lower.style.border = "1px solid black";
     // lower.style.borderRadius = "5px";
-    var commentdiv=document.createElement("div");
-    commentdiv.style.width = "48vw";
-    commentdiv.style.height = "18vw";
-    commentdiv.style.display='none';
-    commentdiv.innerHTML = "HI deepak here u can post your comment";
+    // var commentdiv=document.createElement("div");
+    // commentdiv.style.width = "48vw";
+    // commentdiv.style.height = "18vw";
+    // commentdiv.style.display='none';
+    // commentdiv.innerHTML = "HI deepak here u can post your comment";
     b3.onclick = function(){
 
 
       if (commentdiv.style.display=='none') {
         // alert(commentdiv.style.display);
         commentdiv.style.display='block';
-        lower.appendChild(commentdiv);
+        // lower.appendChild(commentdiv);
       }
       else {
         commentdiv.style.display='none';
@@ -512,6 +403,13 @@ socket.on('update_post', function(data) {
     b3.style.margin="2px";
     lower.appendChild(b3);
 
+    var commentdiv=document.createElement("div");
+    commentdiv.style.width = "48vw";
+    commentdiv.style.height = "18vw";
+    commentdiv.style.display='none';
+    commentdiv.innerHTML = "HI deepak here u can post your comment";
+    lower.appendChild(commentdiv);
+
     var b4=document.createElement("textarea");
     b4.ID = "create_comment";
     b4.placeholder=" Write a comment...";
@@ -532,18 +430,18 @@ socket.on('update_post', function(data) {
 
     lower.style.border = "1px solid black";
     // lower.style.borderRadius = "5px";
-    var commentdiv=document.createElement("div");
-    commentdiv.style.width = "48vw";
-    commentdiv.style.height = "18vw";
-    commentdiv.style.display='none';
-    commentdiv.innerHTML = "HI deepak here u can post your comment";
+    // var commentdiv=document.createElement("div");
+    // commentdiv.style.width = "48vw";
+    // commentdiv.style.height = "18vw";
+    // commentdiv.style.display='none';
+    // commentdiv.innerHTML = "HI deepak here u can post your comment";
     b3.onclick = function(){
 
 
       if (commentdiv.style.display=='none') {
         // alert(commentdiv.style.display);
         commentdiv.style.display='block';
-        lower.appendChild(commentdiv);
+        // lower.appendChild(commentdiv);
       }
       else {
         commentdiv.style.display='none';
@@ -564,33 +462,179 @@ socket.on('update_post', function(data) {
       socket.emit('create_post', {post: post.innerHTML,author:{{username}}});
       // socket.emit('update_post');
     }
+
+
       socket.on('chat', function(data) {
-          // var myemail=document.getElementById('trick');
-          // alert(myemail.value)
-
-          //
-
+        alert(check);
+        if(check==-1){
           openchat(data['name'],data['from']);
-          var onlineID = "chat".concat(data['from']);
-          var area=document.getElementById(onlineID);
-          area.innerHTML+="<br>";
-          area.innerHTML+="<br>";
-          // area.innerHTML+="<br>";
-          // area.innerHTML+=data['Message'];
-
-
-          var other=document.createElement("textarea");
-          other.type="text";
-          other.style.width='100px';
-          other.style.height='30px';
-          other.style.borderRadius= '5px';
-          other.style.resize= 'none';
-          other.value=data['Message'];
-          other.readOnly=true;
-          area.appendChild(other);
-
-        alert(data['Message'])
+        }
+        var onlineID = "chat".concat(data['from']);
+        var area=document.getElementById(onlineID);
+        area.innerHTML+="<br>";
+        // area.innerHTML+="<br>";
+        // // area.innerHTML+="<br>";
+        // area.innerHTML+=data['Message'];
+        var other=document.createElement("textarea");
+        other.type="text";
+        other.style.width='100px';
+        other.style.height='30px';
+        other.style.borderRadius= '5px';
+        other.style.resize= 'none';
+        other.innerHTML=data['Message'];
+        other.readOnly=true;
+        area.appendChild(other);
       });
+
+        function openchat(name,email){
+          check=1;
+          // alert("bsdk");
+          // alert(email);
+          // alert(name);
+          var box=document.getElementById('chatbox');
+          // alert(box.style.display);
+          if (box.style.display=='none') {
+          box.style.display='inline-block';
+          }
+          var New_Chatbox=document.createElement("div");
+          // var Name_box=name;
+          // New_Chatbox.style.marginRight='10px';
+          // New_Chatbox.style.marginLeft='10px';
+
+          var Chat_head=document.createElement("div");
+          Chat_head.innerHTML='<a style="color:white">'+name+'</a>';
+          var cross_button=document.createElement('span');
+          // cross_button.id=Name+"X";
+          cross_button.className="glyphicon glyphicon-remove";
+          cross_button.style.position='relative';
+          cross_button.style.float='right';
+          cross_button.style.color='red';
+          cross_button.onmouseover=function(){
+            this.style.color="grey";
+          }
+          cross_button.onmouseout=function(){
+            this.style.color="red";
+          }
+          cross_button.onclick=function()
+          {
+            box.innerHTML='';
+            box.style.display='none';
+            check=-1;
+            // var string=this.id;
+            // string=string.substr(0,string.length-1);
+            // var k=document.getElementById(string+"2");
+            // Chatting.removeChild(k);
+          }
+          Chat_head.appendChild(cross_button);
+          Chat_head.style.position='fixed';
+          Chat_head.style.float="right";
+          Chat_head.style.padding='5px';
+          Chat_head.style.backgroundColor='#1187c2';
+          Chat_head.style.color='white';
+          Chat_head.style.width='16vw';
+          Chat_head.style.bottom='21vw';
+          New_Chatbox.appendChild(Chat_head);
+          box.appendChild(New_Chatbox);
+
+          var Chat_bottom=document.createElement("div");
+      		Chat_bottom.style.width='16vw';
+      		// Chat_bottom.style.border='1px solid black';
+      		Chat_bottom.style.color='black';
+      		var New_Message=document.createElement("textarea");
+      		New_Message.type="text";
+      		New_Message.style.width='190px';
+      		New_Message.style.height='39px';
+      		New_Message.style.borderRadius= '5px';
+      		New_Message.style.resize= 'none';
+      		New_Message.placeholder="Message";
+      		Chat_bottom.appendChild(New_Message);
+      		var SEND=document.createElement("button");
+      		SEND.className="btn btn-default";
+      		SEND.innerHTML="Send";
+          New_Message.addEventListener("keyup", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Trigger the button element with a click
+              SEND.click();
+            }
+          });
+          SEND.onclick=function(){
+            var massage=New_Message.value;
+            var myemail=document.getElementById('trick');
+            var myname=document.getElementById('trickname');
+            // makemychat("chat".concat(email),massage)
+            // alert('check for send = ');
+            // alert(check);
+      			// var string=this.id;
+      			// var name=striil=document.getElementById('trick');
+                // alert(myemail.value)
+                // var onlineID = "online".concat(myemail.value);
+                //
+                // var area=docng.substr(0,string.length-1);
+      			// var massage=document.getElementById(name+"3").value;
+            // alert({{username}});
+            // var a={{username}};
+            // alert(username);
+
+
+
+            // openchat(data['name'],data['from']);
+            // var onlineID = "chat".concat(data['from']);
+            // var area=document.getElementById(onlineID);
+            // Chat_area.innerHTML+="<br>";
+            Chat_area.innerHTML+="<br>";
+            // // area.innerHTML+="<br>";
+            // Chat_area.innerHTML+=massage;
+            //
+            //
+            var my=document.createElement("textarea");
+            my.type="text";
+            my.style.width='100px';
+            my.style.height='30px';
+            my.style.borderRadius= '5px';
+            my.style.resize= 'none';
+            my.style.backgroundColor= 'lightblue';
+            my.style.float='right';
+            my.innerHTML=massage;
+            my.readOnly=true;
+            Chat_area.appendChild(my);
+
+            // alert(myemail.value);
+      			socket.emit("chat",{to:email,Message:massage,from:myemail.value,name:myname.value});
+      			// var data={to:name,Message:to_send,UserName:user.innerText};
+      			// var Apple=name;
+      			// function1(data,"my",Apple);
+      			New_Message.value="";
+      		};
+
+      		Chat_bottom.appendChild(SEND);
+      		Chat_bottom.style.position='fixed';
+      		Chat_bottom.style.backgroundColor="lightpink";
+      		Chat_bottom.style.bottom='5px';
+      		New_Chatbox.appendChild(Chat_bottom);
+          // box.appendChild(New_Chatbox);
+      // alert("it is making");
+          var  Chat_area=document.createElement('div');
+      		Chat_area.style.backgroundColor="lightpink";
+          // Chat_area.style.position='fixed';
+      		Chat_area.id="chat".concat(email);
+          Chat_area.className='overflowTest';
+      		// Chat_area.style.height='14vw';
+      		// Chat_area.style.width='16vw';
+      		// Chat_area.style.overflow="auto";
+          // Chat_area.scrollTop = Chat_area.scrollHeight;
+      		New_Chatbox.appendChild(Chat_area);
+      		box.appendChild(New_Chatbox);
+      		// var oldChatData={to:Name,UserName:user.innerText};
+      		// socket.emit('myChatInBox',oldChatData);
+      		// New_Message.addEventListener('keypress',function(event){
+      		// 	if(event.keyCode==13)
+      		// 		SEND.click();
+      		// });
+
+        }
 </script>
     <style media="screen">
       .upper{
@@ -616,7 +660,7 @@ socket.on('update_post', function(data) {
       .nocursor { cursor:none; }
       #read_post{
         /* cursor:none; */
-        height:40vw;
+        height:50vw;
         width:58vw;
         overflow:auto;
         background-color: white;
@@ -651,6 +695,15 @@ socket.on('update_post', function(data) {
       .make_italic{
 
       }
+      .overflowTest {
+  background: red;
+  color: black;
+  padding: 15px;
+  width: 16vw;
+  height: 17vw;
+  overflow: scroll;
+  border: 1px solid #ccc;
+}
       .footer{
         width:100vw;
         height:10vw;
@@ -709,7 +762,7 @@ socket.on('update_post', function(data) {
        <!-- <i class="fas fa-thumbs-up"></i> -->
      </div>
 
-     <div id="chatbox" style="display: none;bottom:0%;right:3%;background-color: white;height: 300px;width: 16vw;z-index: 1;position:fixed" class="online_user">
+     <div id="chatbox" style="display: none;bottom:0%;right:3%;background-color:silver;height: 300px;width: 16vw;z-index: 1;position:fixed" class="online_user">
        <!-- depakdvcydhbjkmc -->
      </div>
 
