@@ -17,12 +17,10 @@ var check=-1;
 socket.on('connect', function() {
   // alert("inbuild or io.connect => conenction");
   var myemail=document.getElementById('trick');
-  // alert(myemail.value);
-  socket.emit("makeroom",{me:myemail.value});
+  var myname=document.getElementById('trickname');
+  socket.emit("makeroom",{me:myemail.value,name:myname.value});
   socket.emit('online',{me:myemail.value});
   socket.emit('update_post');
-  // update_post();
-//     // socket.emit('connection', {data: 'I\'m connected!'});
 });
 
 // // if (window.performance) {
@@ -46,64 +44,28 @@ socket.on('connect', function() {
   // $("b").click(function(){
   //     $("h2").html("<p class='test'>click me</p>")
   // });
-   socket.on('online', function(data) {
-// alert("just printing")
-     var onlinediv=document.getElementById("online_user");
-     // onlinediv.innerHTML=" ";
-     if (data['type']=="person") {
-       var onlineID = "online".concat(data['pemail']);
-       // alert(value);
-       onlinediv.innerHTML+='<button id='+onlineID+' style="text-decoration:none;background-color:black; color:white" value='+data['pname']+'>'+data['pname']+'</button>';
-       onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white" onclick=\'openchat("'+data['pname']+'","'+data['pemail']+'")\'>Chat</button>';
-       // alert("cjdncikmc");
-       // var online_person_name = document.createElement("button");
-       // online_person_name.style.backgroundColor="black";
-       // online_person_name.style.color="white";
-       // online_person_name.innerHTML= data['pname'];
-       // onlinediv.appendChild(online_person_name);
-       // var online_person_chat = document.createElement("a");
-       // online_person_chat.innerHTML='Chat';
-       // online_person_chat.style.backgroundColor="black";
-       // online_person_chat.style.color="white";
-       // online_person_chat.className='btn btn-info';
-       // // alert("hi");
-       //  online_person_chat.onclick=function(){
-       //    alert("button");
-       //    openchat(data['pname'],data['pemail']);
-       // };
-       // alert("helllo");
-       // online_person_chat.addEventListener("onclick", openchat(data['pname'],data['pemail']));
-       // onlinediv.appendChild(online_person_chat);
-
-       // onlinediv.appendChild(online_person_chat);
-
+socket.on('online', function(data) {
+  var onlinediv=document.getElementById("online_user");
+  onlinediv.innerHTML=" ";
+  var p=document.createElement("p");
+  p.innerHTML='ONLINE USER';
+  p.style.color='red';
+  p.style.textAlign = "center";
+  p.style.fontSize = "18px";
+  p.style.backgroundColor='black';
+  onlinediv.append(p);
+var myname=document.getElementById('trickname');
+for (const [key, value] of  Object.entries(data)) {
+  // alert(myname.value);
+  // alert(value);
+     if (value!=myname.value) {
+       var onlineID = "online".key;
+       onlinediv.innerHTML+='<button id='+onlineID+' style="text-decoration:none;background-color:black; color:white" value='+value+'>'+value+'</button>';
+       onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white" onclick=\'openchat("'+value+'","'+key+'")\'>Chat</button>';
         onlinediv.innerHTML+= '<br>';
      }
-     else if (data['type']=="club") {
-      //  var online_club_name = document.createElement("button");
-      //  online_club_name.innerHTML= data['cname'];
-      //  onlinediv.appendChild(online_club_name);
-      //  var online_club_chat = document.createElement("button");
-      //  online_club_chat.innerHTML='Chating';
-      //  online_club_chat.id=data['cemail'];
-      //  alert(data['cemail'])
-      // //  online_club_chat.onclick=function(){
-      // //    alert("dmvodmvod");
-     	// // 	 // openchat(data['cname']);
-     	// // };
-      //  onlinediv.appendChild(online_club_chat);
-      var onlineID = "online".concat(data['cemail']);
-      // alert(value);
-      onlinediv.innerHTML+='<button id='+onlineID+' style="text-decoration:none;background-color:black; color:white" value='+data['cname']+'>'+data['cname']+'</button>';
-      onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white" onclick=\'openchat("'+data['cname']+'","'+data['cemail']+'")\'>Chat</button>';
-// alert("cjdncikmc");
-      // onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white">'+data['cname']+'</button>';
-      // onlinediv.innerHTML+='<button style="text-decoration:none;background-color:black; color:white" onclick=\'openchat("'+data['cname']+'","'+data['cemail']+'")\'>Chat</button>';
-       // openchat(data['cname'])
-        onlinediv.innerHTML+= '<br>';
-     }
+}
 
-     // alert(data['name'])
    });
 
 socket.on('update_post', function(data) {
@@ -520,10 +482,6 @@ socket.on('update_post', function(data) {
             box.innerHTML='';
             box.style.display='none';
             check=-1;
-            // var string=this.id;
-            // string=string.substr(0,string.length-1);
-            // var k=document.getElementById(string+"2");
-            // Chatting.removeChild(k);
           }
           Chat_head.appendChild(cross_button);
           Chat_head.style.position='fixed';
@@ -564,26 +522,6 @@ socket.on('update_post', function(data) {
             var massage=New_Message.value;
             var myemail=document.getElementById('trick');
             var myname=document.getElementById('trickname');
-            // makemychat("chat".concat(email),massage)
-            // alert('check for send = ');
-            // alert(check);
-      			// var string=this.id;
-      			// var name=striil=document.getElementById('trick');
-                // alert(myemail.value)
-                // var onlineID = "online".concat(myemail.value);
-                //
-                // var area=docng.substr(0,string.length-1);
-      			// var massage=document.getElementById(name+"3").value;
-            // alert({{username}});
-            // var a={{username}};
-            // alert(username);
-
-
-
-            // openchat(data['name'],data['from']);
-            // var onlineID = "chat".concat(data['from']);
-            // var area=document.getElementById(onlineID);
-            // Chat_area.innerHTML+="<br>";
             Chat_area.innerHTML+="<br>";
             // // area.innerHTML+="<br>";
             // Chat_area.innerHTML+=massage;
@@ -714,9 +652,24 @@ socket.on('update_post', function(data) {
   </head>
   <body>
     <div class="upper">
-      <form style="margin:10px;" class="" action="{{url_for('index')}}" enctype="multipart/form-data" method="POST">
-        <button style="float:right" type="submit" name="logout">LOGOUT</button>
-      </form>
+      <!-- <form style="margin:10px;" class="" action="{{url_for('index')}}" enctype="multipart/form-data" method="POST"> -->
+        <button id="logout" style="float:right" type="submit" name="logout" onclick=logoutme()>LOGOUT</button>
+        <script type="text/javascript">
+        function logoutme(){
+          var myemail=document.getElementById('trick');
+          // var myname=document.getElementById('trickname');
+          // socket.emit("makeroom",{me:myemail.value,name:myname.value});
+          //   document.getElementById('logout').onclick=function()
+          //   {
+              socket.emit('logout',{me:myemail.value});
+              // socket.emit('online',{me:myemail.value});//no more sockete available
+              window.open("{{url_for('index')}}","_self");
+
+          //   }
+        }
+
+        </script>
+      <!-- </form> -->
 
       <!-- <i style="float:right ;" class="fas fa-sign-out-alt">LOGOUT</i> -->
       <!-- <label  style="float:right display:'inline none';">hi</label> -->
@@ -753,12 +706,9 @@ socket.on('update_post', function(data) {
 
      </div>
      <div id="online_user" class="online_user">
-       <center>
-         <!-- newbutton2.className='btn btn-default';
-         newbutton.style.backgroundColor="#26292a";
-         newbutton.style.border="#aeb2b4"; -->
+       <!-- <center>
        <p class="btn btn-default btn-block "style="color:red;background-Color:black;">ONLINE</p>
-       </center>
+       </center> -->
        <!-- <i class="fas fa-thumbs-up"></i> -->
      </div>
 

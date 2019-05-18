@@ -106,11 +106,6 @@ def index():
     print('hihihih'+url_for('index'))
     return render_template('signup.html')
 
-    # return 'arhul, World!'
-# @app.route('/a/b/logout',methods=['POST'])
-# def logout():
-#     print('==============================================================logout'+url_for('index'))
-#     return render_template('signup.html')
 
 @app.route('/student/',methods=['POST'])
 def signupforstudent():
@@ -371,60 +366,27 @@ def update_post():
 @socketio.on('online')
 def online(data):
     print("=======================online============================================ ",data['me'])
-    cur = mysql.connection.cursor()
-    # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
-    cur.execute("select json_object('pname',`pname`,'pemail',`pemail`) from person where online=1;");
-    # cur.execute("select json_object('did',`did`,'pemail',`pemail`,'cemail',`cemail`,'dtype',`dtype`,'time',`time`,'post',`post`,'filename',`filename`) from blog;");
-    mysql.connection.commit();
-    myresult = cur.fetchall()
-    # print("========================================================================================")
-    # print(myresult)
-    # print("========================================================================================")
-    s1 = json.dumps(myresult)
-    # print(s1)
-    # print("========================================================================================")
-    m1=json.loads((s1));
-    # print(m1)
+    print(online_users)
+    socketio.emit('online', online_users)
+    # for i in users.keys():
+    #     if data['me']!=i:
+    #         print(i)
 
-    # print("========================================================================================")
-    # print(m1)
-    m1.reverse()
-    for x in m1:
-        # print(x[0]['post'])
-        p = json.loads(x[0]);
-        p['type'] = 'person'
-        # print(p["post"])
-        room = users[data['me']]
-        emit('online', p, room=room)
-        # socketio.emit('online', p)
+        # emit('online', p, room=room)
 
-    # print("=======================online============================================")
-    cur = mysql.connection.cursor()
-    # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
-    cur.execute("select json_object('cname',`cname`,'cemail',`cemail`) from club where online=1;");
-    # cur.execute("select json_object('did',`did`,'pemail',`pemail`,'cemail',`cemail`,'dtype',`dtype`,'time',`time`,'post',`post`,'filename',`filename`) from blog;");
-    mysql.connection.commit();
-    myresult = cur.fetchall()
-    # print("========================================================================================")
-    # print(myresult)
-    # print("========================================================================================")
-    s1 = json.dumps(myresult)
-    # print(s1)
-    # print("========================================================================================")
-    m1=json.loads((s1));
-    # print(m1)
+@socketio.on('logout')
+def logout(data):
+    print('=logout==================',users)
+    del users[data['me']]
+    del online_users[data['me']]
+    print('=after logout==================',users)
+    # return render_template('signup.html')
 
-    # print("========================================================================================")
-    # print(m1)
-    m1.reverse()
-    for x in m1:
-        # print(x[0]['post'])
-        p = json.loads(x[0]);
-        p['type'] = 'club'
-        # print(p["post"])
-        room = users[data['me']]
-        emit('online', p, room=room)
-
+    # return 'arhul, World!'
+# @app.route('/a/b/logout',methods=['POST'])
+# def logout():
+#     print('==============================================================logout'+url_for('index'))
+#     return render_template('signup.html')
 
 
 @socketio.on('chat')
@@ -446,11 +408,12 @@ def chat(data):
 
 
 # io=socket(server);
-
+online_users={}
 @socketio.on('makeroom')
 def makeroom(data):
-    print(request.sid,"==fghbjnkml,============= ",data['me'])
+    print(data['name'],"==fghbjnkml,============= ",data['me'])
     users[data['me']] = request.sid
+    online_users[data['me']] = data['name']
     # room = session.get(data['me'])
     # print("room ============================ ",room)
     # join_room(room)
