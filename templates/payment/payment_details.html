@@ -8,8 +8,10 @@
     form {
       alignment:center;
       /* marginLeft: 10vw; */
+      /* background-color: black; */
       border: 10px red;
       margin-left: 40%;
+      /* margin-right: 40%; */
     }
     label{color: white;}
     /* #signin{
@@ -35,8 +37,7 @@
     } */
   </style>
 </head>
-<title>Signup/Signin</title>
-
+<title>Payment</title>
 <center>
 <i>
 <h1>YOUR DONTATION IS VAULABLE FOR US</h1>
@@ -55,7 +56,7 @@
   <form id="signupformforstudent" action="{{url_for('shop')}}" method="POST">
      <label for="">Name</label>
      <br>
-     <input type="text" name="name" value="2" required>
+     <input type="text" name="name" value="{{customername}}" required readonly>
      <br>
      <!-- <label for="">Type</label>
      <select name="persontype">
@@ -67,15 +68,15 @@
      <br> -->
      <label for="">Email</label>
      <br>
-     <input type="email" name="email" value="b17086@student.iitmandi.ac.in" required>
+     <input type="email" name="email" value="{{customerid}}" required readonly>
      <br>
-     <label for="">Paytm number</label>
+     <!-- <label for="">BLOG ID</label>
+     <br> -->
+     <input type="number" style="display:none" name="blog_id" value="{{blog_id}}" required>
      <br>
-     <input type="number" name="paytmno" value="1234567890" required>
+     <label for="">Donation Amount</label>
      <br>
-     <label for="">Amount</label>
-     <br>
-     <input type="number" name="amount" value="5" required>
+     <input type="number" name="amount" value="" required>
      <br>
      <br>
      <button type="submit" name="Signup">Donate</button>
