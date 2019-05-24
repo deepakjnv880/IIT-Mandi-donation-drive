@@ -544,8 +544,8 @@ def paymentform(customerid,customername,blog_id):
 
 
 
-MERCHANT_ID = 'fADQZI57666205989648'
-MERCHANT_KEY='nMQZuvux1QzS4Hrf'
+MERCHANT_ID = ''
+MERCHANT_KEY=''
 paymentemail={}
 paymentblog={}
 # MERCHANT_KEY = 'notmade'
