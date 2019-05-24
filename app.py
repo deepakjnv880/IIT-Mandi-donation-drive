@@ -45,7 +45,7 @@ def upload_file():
         # if user does not select file, browser also
         # submit a empty part without filename
         # print("=======================================")
-        print(file.filename)
+        # print(file.filename)
         if file.filename == '':
             # print("**************************************************************==================1")
             # flash('No selected file')
@@ -56,7 +56,7 @@ def upload_file():
             # print("**************************************************************==================2")
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # print("**************************************************************==================2")
-            print(os.path)
+            # print(os.path)
             # print("**************************************************************==================2")
             return redirect(url_for('uploaded_file',
                                     filename=filename))
@@ -103,7 +103,7 @@ mysql.init_app(app)
 
 @app.route('/',methods=['POST','GET'])
 def index():
-    print('hihihih'+url_for('index'))
+    # print('hihihih'+url_for('index'))
     return render_template('signup.html')
 
 
@@ -114,7 +114,7 @@ def signupforstudent():
     type=request.form['persontype']
     password1=request.form['password1']
     password2=request.form['password2']
-    print(name,email,type,password1,password2)
+    # print(name,email,type,password1,password2)
     # print('hihihih2'+url_for('create_account'))
     cur = mysql.connection.cursor()
     # cur.execute('CREATE DATABASE IF NOT EXISTS DBName;')
@@ -142,7 +142,7 @@ def signupforclub():
     type=request.form['clubtype']
     password1=request.form['password1']
     password2=request.form['password2']
-    print(name,email,type,password1,password2)
+    # print(name,email,type,password1,password2)
     # print('hihihih2'+url_for('create_account'))
     cur = mysql.connection.cursor()
     # cur.execute('CREATE DATABASE IF NOT EXISTS DBName;')
@@ -329,7 +329,7 @@ def create_posting():
             # print("**************************************************************==================2")
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # print("**************************************************************==================2")
-            print(os.path)
+            # print(os.path)
             # print(send_from_directory(app.config['UPLOAD_FOLDER'],filename))
             # print("**************************************************************==================2")
             return redirect(url_for('account',username=author,type=authortype,email=email))
@@ -339,7 +339,7 @@ def create_posting():
 def update_post(data):
     room=users[data['me']]
     # print(room)
-    print("-====update_post===============================",data)
+    # print("-====update_post===============================",data)
     # now = datetime.datetime.now()
     # print('- =- =-= -= '+str(data['post'])+' - == -++ '+str(data['author'])+str(now))
     cur = mysql.connection.cursor()
@@ -418,7 +418,7 @@ def update_post(data):
             cur.execute("select interested from social_blog where userid=%s AND blog_id=%s",(str(data['me']),str(p['did'])))
             mysql.connection.commit();
             myresult = cur.fetchall()
-            print(p['did'],"{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}",myresult)
+            # print(p['did'],"{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}",myresult)
             if len(myresult) == 0:
                 p['interestedcheck']='NULL'
             else:
@@ -488,7 +488,7 @@ def logout(data):
     print('=logout==================',users)
     del users[data['me']]
     del online_users[data['me']]
-    print('=after logout==================',users)
+    # print('=after logout==================',users)
     # return render_template('signup.html')
 
     # return 'arhul, World!'
@@ -509,7 +509,7 @@ def chat(data):
     # myresult = cur.fetchall()
     # room = session.get(data['to'])
     room=users[data['to']]
-    print(room)
+    # print(room)
     emit('chat', data, room=room)
 
     # users[data['to']].emit('chat',data)
@@ -544,8 +544,8 @@ def paymentform(customerid,customername,blog_id):
 
 
 
-MERCHANT_ID = ''
-MERCHANT_KEY=''
+MERCHANT_ID = 'fADQZI57666205989648'
+MERCHANT_KEY='nMQZuvux1QzS4Hrf'
 paymentemail={}
 paymentblog={}
 # MERCHANT_KEY = 'notmade'
@@ -578,11 +578,11 @@ def shop():
 
 @app.route('/shop/handlerequest/',methods=['POST'])
 def shop_handlerequest():
-    print(request.form)
+    # print(request.form)
     data = request.form.to_dict()
     check=0
     for i in data.keys():
-        print(i)
+        # print(i)
         if i=='CHECKSUMHASH':
             check=1
 
@@ -595,11 +595,11 @@ def shop_handlerequest():
     else:
         verify=False
 
-    print(verify)
+    # print(verify)
 
     if verify:
         if data['RESPCODE'] == '01':
-            print(paymentblog[data['ORDERID']],"++++++++++++ORDERSUCCESSFUL++++++++++++++++++++++++",paymentemail[data['ORDERID']])
+            # print(paymentblog[data['ORDERID']],"++++++++++++ORDERSUCCESSFUL++++++++++++++++++++++++",paymentemail[data['ORDERID']])
             cur = mysql.connection.cursor()
             cur.execute('CREATE TABLE IF NOT EXISTS club_requirement(blog_id varchar(100) NOT NULL,userid varchar(100),upvote varchar(10),comment varchar(100),time varchar(100),amount_donated FLOAT(8,5) DEFAULT 0,transaction_id varchar(100),primary key (blog_id, userid));')
             # cur.execute("INSERT INTO club_requirement(blog_id,userid,amount_donated,transaction_id,time) VALUES(%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
@@ -626,7 +626,7 @@ def chat(data):
     # myresult = cur.fetchall()
     # room = session.get(data['to'])
     room=users[data['to']]
-    print(room)
+    # print(room)
     emit('chat', data, room=room)
 
     # users[data['to']].emit('chat',data)
@@ -638,24 +638,15 @@ def chat(data):
 
 @socketio.on('insert_in_daily_use_item')
 def insert_in_daily_use_item(data):
-    print("==========inserting in daily_use_item==================",data)
+    # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
-    # INSERT INTO table (id, name, age) VALUES(1, "A", 19) ON DUPLICATE KEY UPDATE  name="A", age=19
     cur.execute('CREATE TABLE IF NOT EXISTS daily_use_item(blog_id varchar(100) NOT NULL,userid varchar(100),recommended varchar(10),not_recommended varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid));')
-    # print("dnvdkfnvkdfn")
-    # cur.execute('DELETE FROM daily_use_item WHERE blog_id=? AND userid=? VALUES(%s,%s)', (data['blog_id'],data['author']));
-    # cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s)",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now())),"ON DUPLICATE KEY UPDATE "+data['key']+",time VALUES(%s,%s)",(data['value'],str(datetime.datetime.now())));
-    # cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) ON DUPLICATE KEY UPDATE ("+data['key']+",time) VALUES(%s,%s,%s,%s,%s,%s)",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
-    # cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) ON DUPLICATE KEY UPDATE ("+data['key']+",time) VALUES(%s,%s,%s,%s,%s,%s)",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
-
-    # cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) VALUES ("+str(data['blog_id'])+","+str(data['blog_id'])+","+data['value']+","+str(datetime.datetime.now())+")")
-    # cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) VALUES("+str(data['blog_id'])+","+data['author']+","+data['value']+","+str(datetime.datetime.now())+")");
     mysql.connection.commit()
 
 @socketio.on('insert_in_social_blog')
 def insert_in_social_blog(data):
-    print("==========inserting in daily_use_item==================",data)
+    # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
     cur.execute('CREATE TABLE IF NOT EXISTS social_blog(blog_id varchar(100) NOT NULL,userid varchar(100),interested varchar(10),not_interested varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid));')
     cur.execute("INSERT INTO social_blog(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
@@ -663,7 +654,7 @@ def insert_in_social_blog(data):
 
 @socketio.on('insert_in_club_requirement')
 def insert_in_club_requirement(data):
-    print("==========inserting in daily_use_item==================",data)
+    # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
     cur.execute('CREATE TABLE IF NOT EXISTS club_requirement(blog_id varchar(100) NOT NULL,userid varchar(100),upvote varchar(10),comment varchar(100),time varchar(100),amount_donated int DEFAULT 0,transaction_id varchar(100),primary key (blog_id, userid));')
     cur.execute("INSERT INTO club_requirement(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
@@ -673,7 +664,7 @@ def insert_in_club_requirement(data):
 @socketio.on('show_me_comment')
 def show_me_comment(data):
 
-    print("==========show me comment==================",data)
+    # print("==========show me comment==================")
     room=users[data['user']]
     cur = mysql.connection.cursor()
     # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
@@ -689,7 +680,7 @@ def show_me_comment(data):
         x,y=(p['userid'].split("@"))
         p['userid']=x
         p['comment_id']=data['comment_id']
-        print(p)
+        # print(p)
         emit('show_me_comment', p, room=room)
     # print(m1)
 
@@ -697,3 +688,27 @@ def show_me_comment(data):
     # cur.execute('CREATE TABLE IF NOT EXISTS club_requirement(blog_id varchar(100) NOT NULL,userid varchar(100),upvote varchar(10),comment varchar(100),time varchar(100),amount_donated int DEFAULT 0,transaction_id varchar(100),primary key (blog_id, userid));')
     # cur.execute("INSERT INTO club_requirement(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     # mysql.connection.commit()
+
+# @socketio.on('show_me_comment')
+# def show_me_comment(data):
+#
+#     print("==========show me comment==================",data)
+#     room=users[data['user']]
+#     cur = mysql.connection.cursor()
+#     # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
+#     cursor.execute(" drop trigger if exists delete_post_trigger")
+#     cur.execute("CREATE TRIGGER delete_post_trigger BEFORE DELETE ON  FOR EACH ROW BEGIN IF (select COUNT(*) from MYTABLE) = 12 THEN SET NEW.COL2 = 10; END IF; END");
+#     mysql.connection.commit();
+#     myresult = cur.fetchall()
+#     s1 = json.dumps(myresult)
+#     m1=json.loads((s1));
+#     m1.reverse()
+#     for x in m1:
+#         # print(x[0]['post'])
+#         p = json.loads(x[0]);
+#         x,y=(p['userid'].split("@"))
+#         p['userid']=x
+#         p['comment_id']=data['comment_id']
+#         print(p)
+#         emit('show_me_comment', p, room=room)
+#     # print(m1)

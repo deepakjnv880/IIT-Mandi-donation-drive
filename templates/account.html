@@ -68,12 +68,18 @@ for (const [key, value] of  Object.entries(data)) {
 
    });
 
+function delete_post(blog_id) {
+     alert(blog_id);
+}
+
 socket.on('update_post', function(data) {
   var myemail=document.getElementById('trick');
   // document.getElementById("read_post").innerHTML='';
       // alert(data['did']);
   if (data['dtype']==="daily_use_item") {
         // data[di]
+        // alert(myemail.value);
+
         var div = document.createElement("div");
         div.style.width = "55vw";
         // div.style.height = auto;
@@ -88,6 +94,9 @@ socket.on('update_post', function(data) {
         creater.innerHTML=res;
         creater.className="make_bold make_italic";
         creater.innerHTML+='<button style="float:right;text-decoration:none;background-color:blue; color:white" disabled>PERSON</button>';
+        if (myemail.value==='nss@iitmandi.ac.in') {
+          creater.innerHTML+='<button style="float:right;margin-right: 30px;text-decoration:none;background-color:blue; color:white" onclick=\'delete_post("'+data['did']+'")\'> ALREADY TAKEN</button>';
+        }
         creater.style.color="red";
         div.appendChild(creater);
         div.innerHTML += data['time'];
@@ -100,7 +109,13 @@ socket.on('update_post', function(data) {
         }
         var lower=document.createElement("div");
         var b1=document.createElement("button");
-        b1.innerHTML=data['recommended'];
+        var rc=document.createElement("p");
+        rc.style.display='inline';
+        var rid="r".concat(data['did']);
+        rc.id=rid;
+        rc.innerText=data['recommended'];
+        b1.appendChild(rc);
+        // b1.innerHTML=data['recommended'];
         b1.className = "fas fa-thumbs-up recommended";
         b1.innerHTML+=" RECOMMENDED";
         b1.style.width = "17vw";
@@ -112,6 +127,8 @@ socket.on('update_post', function(data) {
         b1.onclick = function(){
           // data['recommended']=data['recommended']+1;
           if (b1.style.backgroundColor=='') {
+             document.getElementById(rid).innerText=parseInt((document.getElementById(rid).innerText),10)+1;
+             // alert(rc.innerText);
               b1.style.backgroundColor='aqua';
               b2.style.backgroundColor='';
               // alert("hi4");
@@ -120,6 +137,7 @@ socket.on('update_post', function(data) {
               // alert("hi5");
           }
           else {
+            document.getElementById(rid).innerText=parseInt((document.getElementById(rid).innerText),10)-1;
             b1.style.backgroundColor='';
             // var myemail=document.getElementById('trick');
             socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'recommended',value:'NULL'});
@@ -127,7 +145,14 @@ socket.on('update_post', function(data) {
         };
         lower.appendChild(b1);
         var b2=document.createElement("button");
-        b2.innerHTML=data['not_recommended'];
+
+        // b2.innerHTML=data['not_recommended'];
+        var nrc=document.createElement("p");
+        nrc.style.display='inline';
+        var nrid="nr".concat(data['did']);
+        nrc.id=nrid;
+        nrc.innerText=data['not_recommended'];
+        b2.appendChild(nrc);
         b2.className = "fas fa-thumbs-down not_recommended";
         b2.innerHTML+=" NOT RECOMMENDED";
         b2.style.width = "19vw";
@@ -138,19 +163,27 @@ socket.on('update_post', function(data) {
         }
         b2.onclick = function(){
           if (b2.style.backgroundColor=='') {
+            document.getElementById(nrid).innerText=parseInt((document.getElementById(nrid).innerText),10)+1;
               b2.style.backgroundColor='red';
               b1.style.backgroundColor='';
               socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'recommended',value:'NULL'});
               socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'not_recommended',value:'YES'});
           }
           else {
+            document.getElementById(nrid).innerText=parseInt((document.getElementById(nrid).innerText),10)-1;
             b2.style.backgroundColor='';
             socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'not_recommended',value:'NULL'});
           }
         };
         lower.appendChild(b2);
         var b3=document.createElement("button");
-          b3.innerHTML=data['comment'];
+        // var cc=document.createElement("p");
+        // cc.style.display='inline';
+        // var cid="c".concat(data['did']);
+        // cc.id=cid;
+        // nrc.innerText=data['not_recommended'];
+        // b3.appendChild(nrc);
+        b3.innerHTML=data['comment'];
         b3.className = "fas fa-comment comment";
         b3.innerHTML+=" COMMENTS"
         b3.style.width = "17vw";
@@ -203,6 +236,7 @@ socket.on('update_post', function(data) {
 
           if (b4.value!='') {
             // alert(b4.value);
+            // document.getElementById(cid).innerText=data['comment']+1;
             socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'comment',value:b4.value});
           }
           b4.value='';
@@ -245,7 +279,13 @@ socket.on('update_post', function(data) {
     }
     var lower=document.createElement("div");
     var b1=document.createElement("button");
-    b1.innerHTML=data['interested'];
+    var ic=document.createElement("p");
+    ic.style.display='inline';
+    var iid="i".concat(data['did']);
+    ic.id=iid;
+    ic.innerText=data['interested'];
+    b1.appendChild(ic);
+    // b1.innerHTML=data['interested'];
     b1.className = "fas fa-thumbs-up recommended";
     b1.innerHTML+=" INTERESTED";
     b1.style.width = "17vw";
@@ -257,6 +297,7 @@ socket.on('update_post', function(data) {
     }
     b1.onclick = function(){
       if (b1.style.backgroundColor=='') {
+        document.getElementById(iid).innerText=parseInt((document.getElementById(iid).innerText),10)+1;
           b1.style.backgroundColor='aqua';
           b2.style.backgroundColor='';
           socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'not_interested',value:'NULL'});
@@ -264,13 +305,20 @@ socket.on('update_post', function(data) {
 
       }
       else {
+        document.getElementById(iid).innerText=parseInt((document.getElementById(iid).innerText),10)-1;
         b1.style.backgroundColor='';
         socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'interested',value:'NULL'});
       }
     };
     lower.appendChild(b1);
     var b2=document.createElement("button");
-    b2.innerHTML=data['not_interested'];
+    var nic=document.createElement("p");
+    nic.style.display='inline';
+    var niid="ni".concat(data['did']);
+    nic.id=niid;
+    nic.innerText=data['not_interested'];
+    b2.appendChild(nic);
+    // b2.innerHTML=data['not_interested'];
     b2.className = "fas fa-thumbs-down not_recommended";
     b2.innerHTML+=" NOT INTERESTED";
     b2.style.width = "18vw";
@@ -281,12 +329,14 @@ socket.on('update_post', function(data) {
     }
     b2.onclick = function(){
       if (b2.style.backgroundColor=='') {
+        document.getElementById(niid).innerText=parseInt((document.getElementById(niid).innerText),10)+1;
           b2.style.backgroundColor='red';
           b1.style.backgroundColor='';
           socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'interested',value:'NULL'});
           socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'not_interested',value:'YES'});
       }
       else {
+        document.getElementById(niid).innerText=parseInt((document.getElementById(niid).innerText),10)-1;
         b2.style.backgroundColor='';
         socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'not_interested',value:'NULL'});
       }
@@ -388,7 +438,13 @@ socket.on('update_post', function(data) {
     }
     var lower=document.createElement("div");
     var b1=document.createElement("button");
-    b1.innerHTML=data['upvote'];
+    var uc=document.createElement("p");
+    uc.style.display='inline';
+    var uid="u".concat(data['did']);
+    uc.id=uid;
+    uc.innerText=data['upvote'];
+    b1.appendChild(uc);
+    // b1.innerHTML=data['upvote'];
     b1.className = "fas fa-thumbs-up recommended";
     b1.innerHTML+=" UPVOTE";
     b1.style.width = "17vw";
@@ -400,12 +456,14 @@ socket.on('update_post', function(data) {
     b1.onclick = function(){
       // alert(data['did']);
       if (b1.style.backgroundColor=='') {
+        document.getElementById(uid).innerText=parseInt((document.getElementById(uid).innerText),10)+1;
           b1.style.backgroundColor='aqua';
           b2.style.backgroundColor='';
           socket.emit('insert_in_club_requirement',{author:myemail.value,blog_id:data['did'],key:'upvote',value:'YES'});
           // socket.emit('insert_in_club_requirement',{author:myemail.value,blog_id:data['did'],key:'interested',value:'YES'});
       }
       else {
+        document.getElementById(uid).innerText=parseInt((document.getElementById(uid).innerText),10)-1;
         b1.style.backgroundColor='';
         socket.emit('insert_in_club_requirement',{author:myemail.value,blog_id:data['did'],key:'upvote',value:'NULL'});
       }
