@@ -259,7 +259,7 @@ def create_posting():
     # print('- =- =-= -= '+str(data['post'])+' - == -++ '+str(data['author'])+str(now))
     cur = mysql.connection.cursor()
     cur.execute('CREATE TABLE IF NOT EXISTS blog(did int NOT NULL AUTO_INCREMENT PRIMARY KEY,pemail varchar(100),cemail varchar(100),dtype varchar(100),post varchar(100),time varchar(100),filename varchar(100));')
-    # postere=request.form['article']
+    # cur.execute('CREATE TABLE IF NOT EXISTS blog(did int NOT NULL AUTO_INCREMENT PRIMARY KEY,pemail varchar(100),cemail varchar(100),dtype varchar(100),post varchar(100),time varchar(100),filename varchar(100) ,FOREIGN KEY (pemail) REFERENCES person(pemail) ON DELETE CASCADE,FOREIGN KEY (cemail) REFERENCES club(cemail) ON DELETE CASCADE);')
     print(author,authortype)
 
 
@@ -644,7 +644,7 @@ def chat(data):
 def insert_in_daily_use_item(data):
     # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS daily_use_item(blog_id varchar(100) NOT NULL,userid varchar(100),recommended varchar(10),not_recommended varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid));')
+    cur.execute('CREATE TABLE IF NOT EXISTS daily_use_item(blog_id int NOT NULL,userid varchar(100),recommended varchar(10),not_recommended varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
     cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     mysql.connection.commit()
 
@@ -652,7 +652,7 @@ def insert_in_daily_use_item(data):
 def insert_in_social_blog(data):
     # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS social_blog(blog_id varchar(100) NOT NULL,userid varchar(100),interested varchar(10),not_interested varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid));')
+    cur.execute('CREATE TABLE IF NOT EXISTS social_blog(blog_id int NOT NULL,userid varchar(100),interested varchar(10),not_interested varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
     cur.execute("INSERT INTO social_blog(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     mysql.connection.commit()
 
@@ -660,7 +660,7 @@ def insert_in_social_blog(data):
 def insert_in_club_requirement(data):
     # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS club_requirement(blog_id varchar(100) NOT NULL,userid varchar(100),upvote varchar(10),comment varchar(100),time varchar(100),amount_donated int DEFAULT 0,transaction_id varchar(100),primary key (blog_id, userid));')
+    cur.execute('CREATE TABLE IF NOT EXISTS club_requirement(blog_id int NOT NULL,userid varchar(100),upvote varchar(10),comment varchar(100),time varchar(100),amount_donated int DEFAULT 0,transaction_id varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
     cur.execute("INSERT INTO club_requirement(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     mysql.connection.commit()
 
