@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.25, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
 --
 -- Host: localhost    Database: IDS
 -- ------------------------------------------------------
--- Server version	5.7.25-0ubuntu0.18.04.2
+-- Server version	5.7.26-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,7 +31,7 @@ CREATE TABLE `blog` (
   `time` varchar(100) DEFAULT NULL,
   `filename` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`did`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `blog` (
 
 LOCK TABLES `blog` WRITE;
 /*!40000 ALTER TABLE `blog` DISABLE KEYS */;
-INSERT INTO `blog` VALUES (1,'b17086','nss','daily_use_item','HI brother. How are you?','2019-04-12 10:51:22.785288',NULL),(2,'b17086','nss','daily_use_item','Hi i have one extra shirt. i want to donate it?','2019-04-12 10:52:21.417230','s-l300.jpg'),(3,'Alumuni','programmings','club_requirement','I need 20000.','2019-04-12 10:53:04.041015',NULL),(4,'Alumuni','programmings','club_requirement','needed 2 KG apple. 400 rupee needed','2019-04-12 10:57:48.514225','rag.jpeg'),(5,'Alumuni','nss','club_requirement','Blood donation camp is going on.','2019-04-12 11:10:23.764913',NULL),(6,'Alumuni','programmings','club_requirement','Blood donation camp is going on.','2019-04-12 11:13:00.673556',NULL),(7,'anyone','nss','social','Blood donation camp is going on.','2019-04-12 11:13:36.218034',NULL),(8,'anyone','nss','social','Donation drive is going on. Keep donating.','2019-04-12 11:14:09.594815','broken-glasses-330x220.jpg'),(9,'b17086','nss','daily_use_item','','2019-04-12 18:37:12.820499',NULL);
+INSERT INTO `blog` VALUES (1,'anyone','nss','social','Donative drive is going on... KEEP DONATING','2019-05-17 11:35:00.192786','depositphotos_146108105-stock-photo-donation-box-with-clothes.jpg'),(2,'Alumuni','photography','club_requirement','Our club needed  20000 for camera','2019-05-17 11:41:57.920903','camera.jpg'),(3,'b17039','nss','daily_use_item','I want to donate my torn wallet.It is in usable form','2019-05-17 11:43:03.917012','index.jpeg'),(4,'anyone','nss','social','Blood donation drive is going on...KEEP DONATING','2019-05-17 11:43:50.381584','blood.jpg');
 /*!40000 ALTER TABLE `blog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,8 +67,65 @@ CREATE TABLE `club` (
 
 LOCK TABLES `club` WRITE;
 /*!40000 ALTER TABLE `club` DISABLE KEYS */;
-INSERT INTO `club` VALUES ('nss','nss@iitmandi.ac.in','social','nss',1),('programmings','programmings@iitmandi.ac.in','technical','hi234',1);
+INSERT INTO `club` VALUES ('Art geeks','artgeek@iitmandi.ac.in','cultural','pbkdf2:sha256:50000$Gr8Typm8$482f49c137f347faeff7931579c28cbde7d182966d951fe0e73d330be0d83e7d',1),('nss','nss@iitmandi.ac.in','social','nss',1),('photography','photography@iitmandi.ac.in','cultural','hi234',1),('programmings','programmings@iitmandi.ac.in','technical','hi234',1);
 /*!40000 ALTER TABLE `club` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `club_requirement`
+--
+
+DROP TABLE IF EXISTS `club_requirement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `club_requirement` (
+  `blog_id` varchar(100) NOT NULL,
+  `userid` varchar(100) NOT NULL,
+  `upvote` varchar(10) DEFAULT NULL,
+  `comment` varchar(100) DEFAULT NULL,
+  `time` varchar(100) DEFAULT NULL,
+  `amount_donated` float(8,5) DEFAULT '0.00000',
+  `transaction_id` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`blog_id`,`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `club_requirement`
+--
+
+LOCK TABLES `club_requirement` WRITE;
+/*!40000 ALTER TABLE `club_requirement` DISABLE KEYS */;
+INSERT INTO `club_requirement` VALUES ('2','b17039@student.iitmandi.ac.in','NULL','good one','2019-05-26 11:05:50.136754',47.00000,'20190523111212800110168607900520713');
+/*!40000 ALTER TABLE `club_requirement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `daily_use_item`
+--
+
+DROP TABLE IF EXISTS `daily_use_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `daily_use_item` (
+  `blog_id` varchar(100) NOT NULL,
+  `userid` varchar(100) NOT NULL,
+  `recommended` varchar(10) DEFAULT NULL,
+  `not_recommended` varchar(10) DEFAULT NULL,
+  `comment` varchar(100) DEFAULT NULL,
+  `time` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`blog_id`,`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `daily_use_item`
+--
+
+LOCK TABLES `daily_use_item` WRITE;
+/*!40000 ALTER TABLE `daily_use_item` DISABLE KEYS */;
+INSERT INTO `daily_use_item` VALUES ('3','b17039@student.iitmandi.ac.in','NULL','NULL',NULL,'2019-05-26 11:05:38.675519'),('5','b17039@student.iitmandi.ac.in','YES','NULL','ywa','2019-05-26 11:14:48.374821'),('5','b17086@student.iitmandi.ac.in',NULL,NULL,'good one','2019-05-19 16:05:49.045407'),('5','nss@iitmandi.ac.in','NULL','NULL',NULL,'2019-05-24 11:40:52.663288'),('5','programmings@iitmandi.ac.in','NULL','YES','nice one','2019-05-24 12:44:24.618888');
+/*!40000 ALTER TABLE `daily_use_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -94,8 +151,36 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('Deepak kumar','student','b17039@student.iitmandi.ac.in','hi123',1),('2','student','b17086@student.iitmandi.ac.in','hi123',1);
+INSERT INTO `person` VALUES ('Deepak kumar','student','b17039@student.iitmandi.ac.in','hi123',1),('vinay kumar','student','b17068@student.iitmandi.ac.in','vinay',1),('2','student','b17086@student.iitmandi.ac.in','hi123',1);
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `social_blog`
+--
+
+DROP TABLE IF EXISTS `social_blog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `social_blog` (
+  `blog_id` varchar(100) NOT NULL,
+  `userid` varchar(100) NOT NULL,
+  `interested` varchar(10) DEFAULT NULL,
+  `not_interested` varchar(10) DEFAULT NULL,
+  `comment` varchar(100) DEFAULT NULL,
+  `time` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`blog_id`,`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `social_blog`
+--
+
+LOCK TABLES `social_blog` WRITE;
+/*!40000 ALTER TABLE `social_blog` DISABLE KEYS */;
+INSERT INTO `social_blog` VALUES ('1','b17039@student.iitmandi.ac.in','YES','NULL',NULL,'2019-05-26 11:09:09.740154'),('4','b17039@student.iitmandi.ac.in','NULL','YES','why bro','2019-05-26 11:05:22.568220'),('4','b17086@student.iitmandi.ac.in','NULL','NULL','Timing is not comfortable.','2019-05-19 16:51:48.676554'),('4','programmings@iitmandi.ac.in','NULL','NULL',NULL,'2019-05-24 12:44:55.193500');
+/*!40000 ALTER TABLE `social_blog` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -107,4 +192,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-19  0:12:49
+-- Dump completed on 2019-05-26 20:30:38
