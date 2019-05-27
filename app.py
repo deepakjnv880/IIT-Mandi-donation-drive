@@ -17,6 +17,7 @@ import cgi
 import base64
 import random
 from werkzeug.security import generate_password_hash ,check_password_hash
+import decimal
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -132,8 +133,8 @@ def signupforstudent():
             x,y=(a.split("@"))
             epass = generate_password_hash(password1)
             # print("=========================",epass)
-            cur.execute('CREATE TABLE IF NOT EXISTS person(pname varchar(100),ptype varchar(100),pemail varchar(100),ppassword varchar(100),online int,PRIMARY KEY (pemail));')
-            cur.execute("INSERT INTO person VALUES(%s,%s,%s,%s,%s)",(name,type,email,epass,1));
+            cur.execute('CREATE TABLE IF NOT EXISTS person(pname varchar(100),ptype varchar(100),pemail varchar(100),ppassword varchar(100),rating int,PRIMARY KEY (pemail));')
+            cur.execute("INSERT INTO person VALUES(%s,%s,%s,%s,%s)",(name,type,email,epass,0));
             mysql.connection.commit();
             return redirect(url_for('account',username=x,type="student",email=email))
         except Exception as e:
@@ -161,9 +162,9 @@ def signupforclub():
             a=email
             x,y=(a.split("@"))
             epass = generate_password_hash(password1)
-            cur.execute('CREATE TABLE IF NOT EXISTS club(cname varchar(100),cemail varchar(100),ctype varchar(100),cpassword varchar(100),online int,PRIMARY KEY (cemail));')
-            print("____________________________________________________________________________________")
-            cur.execute("INSERT INTO club VALUES(%s,%s,%s,%s,%s)",(name,email,type,epass,1));
+            cur.execute('CREATE TABLE IF NOT EXISTS club(cname varchar(100),cemail varchar(100),ctype varchar(100),cpassword varchar(100),rating int,PRIMARY KEY (cemail));')
+            # print("____________________________________________________________________________________")
+            cur.execute("INSERT INTO club VALUES(%s,%s,%s,%s,%s)",(name,email,type,epass,0));
             mysql.connection.commit();
             return redirect(url_for('account',username=x,type="club",email=email))
         except Exception as e:
@@ -288,7 +289,7 @@ def create_posting():
         # if user does not select file, browser also
         # submit a empty part without filename
         # print("=======================================")
-        print(file.filename)
+        # print(file.filename)
         if file.filename == '':
             # print("**************************************************************==================1")
             if (author=="nss"):
@@ -343,12 +344,14 @@ def create_posting():
 def update_post(data):
     room=users[data['me']]
     # print(room)
-    # print("-====update_post===============================",data)
+    # print("-====update_post===============================")
     # now = datetime.datetime.now()
     # print('- =- =-= -= '+str(data['post'])+' - == -++ '+str(data['author'])+str(now))
     cur = mysql.connection.cursor()
     # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
+    # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     cur.execute("select json_object('did',`did`,'pemail',`pemail`,'cemail',`cemail`,'dtype',`dtype`,'time',`time`,'post',`post`,'filename',`filename`) from blog;");
+    # print('==============================!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     mysql.connection.commit();
     myresult = cur.fetchall()
     # print("========================================================================================")
@@ -366,23 +369,27 @@ def update_post(data):
     for x in m1:
         # print(x[0]['post'])
         p = json.loads(x[0]);
+        p['did']=str(p['did'])
+
 
         if p["dtype"]=='daily_use_item':
             # print(p["dtype"])
             cur = mysql.connection.cursor()
-            cur.execute("select count(recommended) from daily_use_item where recommended='YES' AND blog_id="+str(p['did'])+";");
+            cur.execute('CREATE TABLE IF NOT EXISTS daily_use_item(blog_id int NOT NULL,userid varchar(100),recommended varchar(10),not_recommended varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
+            # print("jiji")
+            cur.execute("select count(recommended) from daily_use_item where recommended='YES' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['recommended']=myresult[0][0]
-            cur.execute("select count(not_recommended) from daily_use_item where not_recommended='YES' AND blog_id="+str(p['did'])+";");
+            cur.execute("select count(not_recommended) from daily_use_item where not_recommended='YES' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['not_recommended']=myresult[0][0]
-            cur.execute("select count(comment) from daily_use_item where comment!='NULL' AND blog_id="+str(p['did'])+";");
+            cur.execute("select count(comment) from daily_use_item where comment!='NULL' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['comment']=myresult[0][0]
-            cur.execute("select recommended from daily_use_item where userid=%s AND blog_id=%s",(str(data['me']),str(p['did'])))
+            cur.execute("select recommended from daily_use_item where userid=%s AND blog_id=%s",(str(data['me']),(p['did'])))
             mysql.connection.commit();
             myresult = cur.fetchall()
             # print(myresult)
@@ -391,7 +398,7 @@ def update_post(data):
             else:
                 p['recommendedcheck']=myresult[0][0]
 
-            cur.execute("select not_recommended from daily_use_item where userid=%s AND blog_id=%s",(str(data['me']),str(p['did'])))
+            cur.execute("select not_recommended from daily_use_item where userid=%s AND blog_id=%s",(str(data['me']),(p['did'])))
             mysql.connection.commit();
             myresult = cur.fetchall()
             # print(myresult)
@@ -407,19 +414,20 @@ def update_post(data):
         if p["dtype"]=='social':
             # print(p["dtype"])
             cur = mysql.connection.cursor()
-            cur.execute("select count(interested) from social_blog where interested='YES' AND blog_id="+str(p['did'])+";");
+            cur.execute('CREATE TABLE IF NOT EXISTS social_blog(blog_id int NOT NULL,userid varchar(100),interested varchar(10),not_interested varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
+            cur.execute("select count(interested) from social_blog where interested='YES' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['interested']=myresult[0][0]
-            cur.execute("select count(not_interested) from social_blog where not_interested='YES' AND blog_id="+str(p['did'])+";");
+            cur.execute("select count(not_interested) from social_blog where not_interested='YES' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['not_interested']=myresult[0][0]
-            cur.execute("select count(comment) from social_blog where comment!='NULL' AND blog_id="+str(p['did'])+";");
+            cur.execute("select count(comment) from social_blog where comment!='NULL' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['comment']=myresult[0][0]
-            cur.execute("select interested from social_blog where userid=%s AND blog_id=%s",(str(data['me']),str(p['did'])))
+            cur.execute("select interested from social_blog where userid=%s AND blog_id=%s",(str(data['me']),(p['did'])))
             mysql.connection.commit();
             myresult = cur.fetchall()
             # print(p['did'],"{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}",myresult)
@@ -428,7 +436,7 @@ def update_post(data):
             else:
                 p['interestedcheck']=myresult[0][0]
             # p['intestedcheck']=myresult[0][0]
-            cur.execute("select not_interested from social_blog where userid=%s AND blog_id=%s",(str(data['me']),str(p['did'])))
+            cur.execute("select not_interested from social_blog where userid=%s AND blog_id=%s",(str(data['me']),(p['did'])))
             mysql.connection.commit();
             myresult = cur.fetchall()
             if len(myresult) == 0:
@@ -445,19 +453,33 @@ def update_post(data):
         if p["dtype"]=='club_requirement':
             # print(p["dtype"])
             cur = mysql.connection.cursor()
-            cur.execute("select count(upvote) from club_requirement where upvote='YES' AND blog_id="+str(p['did'])+";");
+            cur.execute('CREATE TABLE IF NOT EXISTS club_requirement(blog_id int NOT NULL,userid varchar(100),upvote varchar(10),comment varchar(100),time varchar(100),amount_donated int DEFAULT 0,transaction_id varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
+            cur.execute("select count(upvote) from club_requirement where upvote='YES' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['upvote']=myresult[0][0]
-            cur.execute("select sum(amount_donated) from club_requirement where blog_id="+str(p['did'])+";");
+            cur.execute("select sum(amount_donated) from club_requirement where blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
-            p['total_amount_donated']=myresult[0][0]
-            cur.execute("select count(comment) from club_requirement where comment!='NULL' AND blog_id="+str(p['did'])+";");
+            # print(myresult[0][0])
+            if str(myresult[0][0]) == 'None':
+                p['total_amount_donated']=0
+            else:
+                # print(myresult)
+                a = int(decimal.Decimal(myresult[0][0]))
+                p['total_amount_donated']=a
+
+            # print(type(a))
+            # # a=myresult[0][0]
+            # # a=a+4
+            # print("--------------------------------------",a)
+
+            # p['total_amount_donated']=a
+            cur.execute("select count(comment) from club_requirement where comment!='NULL' AND blog_id="+(p['did'])+";");
             mysql.connection.commit();
             myresult = cur.fetchall()
             p['comment']=myresult[0][0]
-            cur.execute("select upvote from club_requirement where userid=%s AND blog_id=%s",(str(data['me']),str(p['did'])))
+            cur.execute("select upvote from club_requirement where userid=%s AND blog_id=%s",(str(data['me']),(p['did'])))
             mysql.connection.commit();
             myresult = cur.fetchall()
             # print(myresult)
@@ -465,14 +487,8 @@ def update_post(data):
                 p['upvotecheck']='NULL'
             else:
                 p['upvotecheck']=myresult[0][0]
-            # p['upvotecheck']=myresult[0][0]
-            # cur.execute("select not_recommended from club_requirement where userid=%s AND blog_id=%s",(str(data['me']),str(p['did'])))
-            # mysql.connection.commit();
-            # myresult = cur.fetchall()
-            # print(myresult)
-            # p['not_recommendedcheck']=myresult[0][0]
-            # print("@@@@@@@@@@@@@@@@@@@@@@@@@",p)
-            # select count(not_recommended) from daily_use_item where not_recommended='YES' ;
+
+            #on donatioon error goees
             emit('update_post', p, room=room)
             # socketio.emit('update_post', p)
 
@@ -578,6 +594,7 @@ def shop():
 
         }
     deepak_dict['CHECKSUMHASH'] = Checksum.generate_checksum(deepak_dict, MERCHANT_KEY)
+    print(deepak_dict)
     return render_template('payment/paytm.html', deepak_dict=deepak_dict)
 
 @app.route('/shop/handlerequest/',methods=['POST'])
@@ -621,30 +638,17 @@ def shop_handlerequest():
 
 @socketio.on('chat')
 def chat(data):
-    # print("==-=-=======-=---------chat---------================= ",data['from'])
-    # cur = mysql.connection.cursor()
-    # # cur.execute('CREATE TABLE IF NOT EXISTS blog(author varchar(100),post varchar(100),time varchar(100));')
-    # cur.execute("select json_object('pname',`pname`,'pemail',`pemail`) from person where online=1;");
-    # # cur.execute("select json_object('did',`did`,'pemail',`pemail`,'cemail',`cemail`,'dtype',`dtype`,'time',`time`,'post',`post`,'filename',`filename`) from blog;");
-    # mysql.connection.commit();
-    # myresult = cur.fetchall()
-    # room = session.get(data['to'])
     room=users[data['to']]
-    # print(room)
     emit('chat', data, room=room)
-
-    # users[data['to']].emit('chat',data)
-
-
 
 # io=socket(server);
 
 
 @socketio.on('insert_in_daily_use_item')
 def insert_in_daily_use_item(data):
-    # print("==========inserting in daily_use_item==================")
+    print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS daily_use_item(blog_id int NOT NULL,userid varchar(100),recommended varchar(10),not_recommended varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
+    # cur.execute('CREATE TRIGGER daily_use_item_trigger BEFORE UPDATE ON daily_use_item FOR EACH ROW BEGIN DELETE daily_use_item where daily_use_item.blog_id = OLD.did; END;')
     cur.execute("INSERT INTO daily_use_item(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     mysql.connection.commit()
 
@@ -652,7 +656,6 @@ def insert_in_daily_use_item(data):
 def insert_in_social_blog(data):
     # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS social_blog(blog_id int NOT NULL,userid varchar(100),interested varchar(10),not_interested varchar(10),comment varchar(100),time varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
     cur.execute("INSERT INTO social_blog(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     mysql.connection.commit()
 
@@ -660,7 +663,6 @@ def insert_in_social_blog(data):
 def insert_in_club_requirement(data):
     # print("==========inserting in daily_use_item==================")
     cur = mysql.connection.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS club_requirement(blog_id int NOT NULL,userid varchar(100),upvote varchar(10),comment varchar(100),time varchar(100),amount_donated int DEFAULT 0,transaction_id varchar(100),primary key (blog_id, userid),FOREIGN KEY (blog_id) REFERENCES blog(did) ON DELETE CASCADE);')
     cur.execute("INSERT INTO club_requirement(blog_id,userid,"+data['key']+",time) VALUES(%s,%s,%s,%s) ON DUPLICATE KEY UPDATE "+data['key']+" = %s , time=%s",(data['blog_id'],data['author'],data['value'],str(datetime.datetime.now()),data['value'],str(datetime.datetime.now())));
     mysql.connection.commit()
 
@@ -697,10 +699,15 @@ def show_me_comment(data):
 def delete_post(data):
 
     print("==========delete_post==================",data)
-
+    data['user']=data['user']+"students@iitmandi.ac.in"
+    # print(data)
     cur = mysql.connection.cursor()
+
+    # cur.execute("CREATE TRIGGER delete_post_trigger BEFORE DELETE ON blog FOR EACH ROW BEGIN IF (select rating from person where pemail= 'b17068@student.iitmandi.ac.in') THEN SET person.rating =person.rating+4; END IF; END");
+    # cur.execute("CREATE TRIGGER update_user_before_delete BEFORE DELETE ON blog FOR EACH ROW BEGIN UPDATE person SET rating = 1 WHERE pemail = "+data['user']+"; END;")
     cur.execute("delete from blog where did="+data['blog_id']+"")
     mysql.connection.commit();
+    # print("post deleted with updating rating of user")
     # print(m1)
 
     # cursor.execute(" drop trigger if exists delete_post_trigger")

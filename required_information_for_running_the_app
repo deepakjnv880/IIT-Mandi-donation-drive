@@ -1,0 +1,17 @@
+create the database "IDS" 
+change your mysqlpassword is "******" or change in app.py line number 93
+Then go to repective folder
+command to run the app
+flask run --no-reload
+
+if pip not install please install pip/pip3 and also python/python3
+also install mysql
+installation command for main module
+ --
+pip install flask
+pip install flask-mysqldb
+pip install flask-socketio
+pip install Flask-Session
+
+then for other module
+install the module one by one untill error goes

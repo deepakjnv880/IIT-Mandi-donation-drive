@@ -68,8 +68,13 @@ for (const [key, value] of  Object.entries(data)) {
 
    });
 
-function delete_post(blog_id) {
-     alert(blog_id);
+function delete_post(blog_id,user,recommended) {
+// alert(user);
+  socket.emit('delete_post',{blog_id:blog_id,user:user,recommended:recommended});
+  var myemail=document.getElementById('trick');
+  blog_id="blog".concat(blog_id);
+  document.getElementById(blog_id).remove();
+
 }
 
 socket.on('update_post', function(data) {
@@ -82,7 +87,7 @@ socket.on('update_post', function(data) {
 
         var div = document.createElement("div");
         div.style.width = "55vw";
-        // div.style.height = auto;
+        div.id= "blog".concat(data['did']);
         div.style.border = "1px solid black";
         div.style.borderRadius = "5px";
         div.style.background = "white";
@@ -95,7 +100,7 @@ socket.on('update_post', function(data) {
         creater.className="make_bold make_italic";
         creater.innerHTML+='<button style="float:right;text-decoration:none;background-color:blue; color:white" disabled>PERSON</button>';
         if (myemail.value==='nss@iitmandi.ac.in') {
-          creater.innerHTML+='<button style="float:right;margin-right: 30px;text-decoration:none;background-color:blue; color:white" onclick=\'delete_post("'+data['did']+'")\'> ALREADY TAKEN</button>';
+          creater.innerHTML+='<button style="float:right;margin-right: 30px;text-decoration:none;background-color:blue; color:white" onclick=\'delete_post("'+data['did']+'","'+res+'","'+data['recommended']+'")\'> ALREADY TAKEN</button>';
         }
         creater.style.color="red";
         div.appendChild(creater);
@@ -128,9 +133,12 @@ socket.on('update_post', function(data) {
           // data['recommended']=data['recommended']+1;
           if (b1.style.backgroundColor=='') {
              document.getElementById(rid).innerText=parseInt((document.getElementById(rid).innerText),10)+1;
-             // alert(rc.innerText);
-              b1.style.backgroundColor='aqua';
+             if (b2.style.backgroundColor=='red') {
+              document.getElementById(nrid).innerText=parseInt((document.getElementById(nrid).innerText),10)-1;
               b2.style.backgroundColor='';
+             }
+              b1.style.backgroundColor='aqua';
+
               // alert("hi4");
               socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'not_recommended',value:'NULL'});
               socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'recommended',value:'YES'});
@@ -165,6 +173,10 @@ socket.on('update_post', function(data) {
           if (b2.style.backgroundColor=='') {
             document.getElementById(nrid).innerText=parseInt((document.getElementById(nrid).innerText),10)+1;
               b2.style.backgroundColor='red';
+              if (b1.style.backgroundColor=='aqua') {
+               document.getElementById(rid).innerText=parseInt((document.getElementById(rid).innerText),10)-1;
+               b1.style.backgroundColor='';
+              }
               b1.style.backgroundColor='';
               socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'recommended',value:'NULL'});
               socket.emit('insert_in_daily_use_item',{author:myemail.value,blog_id:data['did'],key:'not_recommended',value:'YES'});
@@ -299,7 +311,10 @@ socket.on('update_post', function(data) {
       if (b1.style.backgroundColor=='') {
         document.getElementById(iid).innerText=parseInt((document.getElementById(iid).innerText),10)+1;
           b1.style.backgroundColor='aqua';
-          b2.style.backgroundColor='';
+          if (b2.style.backgroundColor=='red') {
+           document.getElementById(niid).innerText=parseInt((document.getElementById(niid).innerText),10)-1;
+           b2.style.backgroundColor='';
+          }
           socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'not_interested',value:'NULL'});
           socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'interested',value:'YES'});
 
@@ -331,7 +346,11 @@ socket.on('update_post', function(data) {
       if (b2.style.backgroundColor=='') {
         document.getElementById(niid).innerText=parseInt((document.getElementById(niid).innerText),10)+1;
           b2.style.backgroundColor='red';
-          b1.style.backgroundColor='';
+          if (b1.style.backgroundColor=='aqua') {
+           document.getElementById(iid).innerText=parseInt((document.getElementById(iid).innerText),10)-1;
+           b1.style.backgroundColor='';
+          }
+          // b1.style.backgroundColor='';
           socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'interested',value:'NULL'});
           socket.emit('insert_in_social_blog',{author:myemail.value,blog_id:data['did'],key:'not_interested',value:'YES'});
       }
@@ -843,6 +862,9 @@ socket.on('update_post', function(data) {
   <body>
     <div class="upper">
       <!-- <form style="margin:10px;" class="" action="{{url_for('index')}}" enctype="multipart/form-data" method="POST"> -->
+      <!-- <label style="margin-left:50vw; display:inline;" class="fas fa-user"></label> -->
+      <label style="margin-left:80vw;" class="fas fa-user" for="">{{name}}</label>
+
         <button id="logout" style="float:right" type="submit" name="logout" onclick=logoutme()>LOGOUT</button>
         <script type="text/javascript">
         function logoutme(){
@@ -869,7 +891,7 @@ socket.on('update_post', function(data) {
     <div class="body">
 
       <div class="side">
-   <center>footer</center>
+   <!-- <center>footer</center> -->
       </div>
 
       <div class="post">
