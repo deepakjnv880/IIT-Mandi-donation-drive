@@ -1,0 +1,16 @@
+SELECT DISTINCT     TABLE_NAME,     INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = 'IDS';
+show index from person;
+CREATE INDEX deepak ON person(pname);
+drop index [index name];
+SHOW TABLE STATUS;// to show storage engine
++++++++++++++++++++++======
+The INSERT and UPDATE statements take more time on tables having indexes, whereas the SELECT statements become fast on those tables.
++++++++++++++++++++++======
+You can create a unique index on a table. A unique index means that two rows cannot have the same index value. Here is the syntax to create an Index on a table.
+
+CREATE UNIQUE INDEX index_name ON table_name ( column1, column2,...);
+
+A storage engine is a software module that a database management system uses to create, read, update data from a database. There are two types of storage engines in MySQL: transactional and non-transactional. For MySQL 5.5 and later, the default storage engine is InnoDB.
+
+
+
